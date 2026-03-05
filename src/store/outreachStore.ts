@@ -6,7 +6,6 @@ interface OutreachUIState {
   isDetailOpen: boolean;
   isFormOpen: boolean;
   editingEntryId: string | null;
-  sidebarCollapsed: boolean;
   rightSidebarCollapsed: boolean;
   expandedEntryId: string | null;
   prefillData: Partial<OutreachFormData> | null;
@@ -18,8 +17,6 @@ interface OutreachUIState {
   openFormWithPrefill: (data: Partial<OutreachFormData>) => void;
   closeForm: () => void;
   clearPrefill: () => void;
-  toggleSidebar: () => void;
-  setSidebarCollapsed: (collapsed: boolean) => void;
   toggleRightSidebar: () => void;
   expandEntry: (id: string) => void;
   collapseEntry: () => void;
@@ -32,7 +29,6 @@ export const useOutreachStore = create<OutreachUIState>((set) => ({
   isDetailOpen: false,
   isFormOpen: false,
   editingEntryId: null,
-  sidebarCollapsed: false,
   rightSidebarCollapsed: false,
   expandedEntryId: null,
   prefillData: null,
@@ -44,8 +40,6 @@ export const useOutreachStore = create<OutreachUIState>((set) => ({
   openFormWithPrefill: (data) => set({ isFormOpen: true, editingEntryId: null, prefillData: data, isDetailOpen: false, selectedEntryId: null }),
   closeForm: () => set({ isFormOpen: false, editingEntryId: null, prefillData: null }),
   clearPrefill: () => set({ prefillData: null }),
-  toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),
-  setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
   toggleRightSidebar: () => set((s) => ({ rightSidebarCollapsed: !s.rightSidebarCollapsed })),
   expandEntry: (id) => set({ expandedEntryId: id }),
   collapseEntry: () => set({ expandedEntryId: null }),

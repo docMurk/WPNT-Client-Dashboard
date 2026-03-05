@@ -88,9 +88,6 @@ export function HistoryView() {
       <div className="flex items-center justify-between border-b border-wpnt-border px-6 py-4">
         <div>
           <h2 className="text-lg font-semibold text-wpnt-body">History</h2>
-          <p className="text-xs text-wpnt-text mt-0.5">
-            {sortedEntries.length} archived {sortedEntries.length === 1 ? 'entry' : 'entries'}
-          </p>
         </div>
       </div>
 

@@ -73,7 +73,7 @@ export function CardDetailPanel({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-7 py-6 space-y-4">
+        <div className="px-8 py-7 space-y-5">
           {/* Header: Logo + Name */}
           <div className="flex items-center gap-3">
             <ClientLogo clientId={entry.clientId} size={36} />
@@ -120,14 +120,14 @@ export function CardDetailPanel({
           <div className="flex items-center gap-2">
             <button
               onClick={onEdit}
-              className="flex items-center gap-1.5 rounded-md border border-wpnt-border bg-white shadow-sm px-3 py-1.5 text-xs text-wpnt-text hover:shadow hover:border-wpnt-blue/30 transition-all"
+              className="flex items-center gap-1.5 rounded-md border border-wpnt-border bg-white shadow-sm px-3.5 py-2 text-xs text-wpnt-text hover:shadow hover:border-wpnt-blue/30 transition-all"
             >
               <Pencil size={12} />
               Edit
             </button>
             <button
               onClick={onViewFull}
-              className="flex items-center gap-1.5 rounded-md border border-wpnt-border bg-white shadow-sm px-3 py-1.5 text-xs text-wpnt-text hover:shadow hover:border-wpnt-blue/30 transition-all"
+              className="flex items-center gap-1.5 rounded-md border border-wpnt-border bg-white shadow-sm px-3.5 py-2 text-xs text-wpnt-text hover:shadow hover:border-wpnt-blue/30 transition-all"
             >
               <Eye size={12} />
               View Full Detail

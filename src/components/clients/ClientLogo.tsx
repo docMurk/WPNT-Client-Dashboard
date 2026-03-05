@@ -74,6 +74,7 @@ export function ClientLogo({ clientId, size = 32, className = '', showLabel = fa
         <img
           src={client.logoUrl}
           alt={client.name}
+          draggable={false}
           className={`rounded-md object-contain ${className}`}
           style={{ width: size, height: size }}
           onError={() => {
@@ -91,6 +92,7 @@ export function ClientLogo({ clientId, size = 32, className = '', showLabel = fa
         <img
           src={logoUrl}
           alt={client.name}
+          draggable={false}
           className={`rounded-md object-contain ${className}`}
           style={{ width: size, height: size }}
           onLoad={() => handleLoad(logoUrl)}
@@ -118,7 +120,7 @@ export function ClientLogo({ clientId, size = 32, className = '', showLabel = fa
   if (!showLabel) return renderLogo();
 
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center gap-1 pointer-events-none">
       {renderLogo()}
       <span
         className="text-[10px] font-medium text-wpnt-body leading-tight text-center line-clamp-2"

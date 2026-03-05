@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, useLayoutEffect } from 'react';
 import dayjs from 'dayjs';
 import { ClientLogo } from '@/components/clients/ClientLogo';
 import { getAbbreviation } from '@/lib/programAbbreviations';
@@ -62,8 +62,10 @@ export function EntryCard({
   const [dragOffsetX, setDragOffsetX] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
   const [dragTargetDate, setDragTargetDate] = useState('');
-  const [suppressTransition, setSuppressTransition] = useState(false);
-  const suppressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // FLIP animation ref — stores visual position at drop time
+  const dropXRef = useRef<number | null>(null);
+
   const updateOutreach = useUpdateOutreach();
 
   // Aging indicator (ring only, no text)
@@ -99,7 +101,7 @@ export function EntryCard({
       dragStateRef.current = 'pending';
       dragStartXRef.current = e.clientX;
       dragStartLeftRef.current = (style.left as number) || 0;
-      (e.target as HTMLElement).setPointerCapture(e.pointerId);
+      e.currentTarget.setPointerCapture(e.pointerId);
     },
     [isExpanded, style.left],
   );
@@ -135,13 +137,15 @@ export function EntryCard({
         e.stopPropagation();
         const newLeft = dragStartLeftRef.current + (e.clientX - dragStartXRef.current);
         const newDate = pixelToDate(newLeft);
-        // Suppress transitions after drag to prevent bounce-back animation
-        setSuppressTransition(true);
-        if (suppressTimerRef.current) clearTimeout(suppressTimerRef.current);
-        suppressTimerRef.current = setTimeout(() => setSuppressTransition(false), 300);
+
+        // Store the visual drop position for FLIP animation
+        dropXRef.current = newLeft;
+
         if (newDate !== entry.dateSent) {
           updateOutreach.mutate({ id: entry.id, data: { dateSent: newDate } });
         }
+
+        // Let React re-render with new layout position
         setIsDragging(false);
         setDragOffsetX(0);
         setDragTargetDate('');
@@ -154,8 +158,46 @@ export function EntryCard({
     [pixelToDate, entry.dateSent, entry.id, updateOutreach, onToggle],
   );
 
+  // FLIP animation: after layout updates, animate from drop position to final position
+  useLayoutEffect(() => {
+    if (dropXRef.current === null) return;
+    const el = cardRef.current;
+    if (!el) {
+      dropXRef.current = null;
+      return;
+    }
+
+    const newLeft = (style.left as number) || 0;
+    const delta = dropXRef.current - newLeft;
+    dropXRef.current = null;
+
+    // If the delta is negligible, skip animation
+    if (Math.abs(delta) < 1) return;
+
+    // Invert: place card at its old visual position (no transition)
+    el.style.transform = `translateX(${delta}px)`;
+    el.style.transition = 'none';
+
+    // Force reflow so the browser registers the starting position
+    el.getBoundingClientRect();
+
+    // Play: animate to final position
+    el.style.transition = 'transform 200ms ease-out';
+    el.style.transform = 'translateX(0)';
+
+    const cleanup = () => {
+      el.style.transform = '';
+      el.style.transition = '';
+    };
+    el.addEventListener('transitionend', cleanup, { once: true });
+
+    return () => {
+      el.removeEventListener('transitionend', cleanup);
+    };
+  }, [style.left]);
+
   const transitionStyle =
-    isZooming || isDragging || suppressTransition ? {} : { transition: 'left 150ms ease-out, top 150ms ease-out, bottom 150ms ease-out' };
+    isZooming || isDragging ? {} : { transition: 'left 150ms ease-out, top 150ms ease-out, bottom 150ms ease-out' };
   const dragStyle = isDragging
     ? { transform: `translateX(${dragOffsetX}px)`, zIndex: 50, cursor: 'grabbing' }
     : {};
@@ -181,7 +223,7 @@ export function EntryCard({
         onPointerDown={handleCardPointerDown}
         onPointerMove={handleCardPointerMove}
         onPointerUp={handleCardPointerUp}
-        className={`flex flex-col items-center gap-0.5 rounded-xl border border-wpnt-border bg-white shadow-sm px-3.5 pt-3.5 pb-2.5 cursor-pointer hover:shadow-md transition-shadow select-none ${
+        className={`flex flex-col items-center gap-0.5 rounded-xl border border-wpnt-border bg-white shadow px-3.5 pt-3.5 pb-2.5 cursor-pointer hover:shadow-md transition-shadow select-none ${
           isDragging ? 'shadow-lg ring-2 ring-wpnt-blue/30' : isAging ? 'ring-2 ring-status-declined/40' : ''
         } ${isExpanded ? 'ring-2 ring-wpnt-blue/40' : ''}`}
         style={{ width: CARD_WIDTH, minHeight: CARD_HEIGHT - 10 }}
