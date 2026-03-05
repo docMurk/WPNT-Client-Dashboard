@@ -63,8 +63,8 @@ export function EntryCard({
   const [isDragging, setIsDragging] = useState(false);
   const [dragTargetDate, setDragTargetDate] = useState('');
 
-  // FLIP animation ref — stores visual position at drop time
-  const dropXRef = useRef<number | null>(null);
+  // FLIP animation ref — stores visual bounding rect at drop time
+  const dropRectRef = useRef<DOMRect | null>(null);
 
   const updateOutreach = useUpdateOutreach();
 
@@ -138,10 +138,11 @@ export function EntryCard({
         const newLeft = dragStartLeftRef.current + (e.clientX - dragStartXRef.current);
         const newDate = pixelToDate(newLeft);
 
-        // Store the visual drop position for FLIP animation
-        dropXRef.current = newLeft;
-
         if (newDate !== entry.dateSent) {
+          // Capture visual rect before layout changes for 2D FLIP animation
+          if (cardRef.current) {
+            dropRectRef.current = cardRef.current.getBoundingClientRect();
+          }
           updateOutreach.mutate({ id: entry.id, data: { dateSent: newDate } });
         }
 
@@ -159,23 +160,27 @@ export function EntryCard({
   );
 
   // FLIP animation: after layout updates, animate from drop position to final position
-  useLayoutEffect(() => {
-    if (dropXRef.current === null) return;
-    const el = cardRef.current;
-    if (!el) {
-      dropXRef.current = null;
-      return;
-    }
+  // Track both horizontal and vertical position for 2D FLIP
+  const styleLeft = (style.left as number) || 0;
+  const styleVertical = ((style.bottom ?? style.top) as number) || 0;
 
-    const newLeft = (style.left as number) || 0;
-    const delta = dropXRef.current - newLeft;
-    dropXRef.current = null;
+  useLayoutEffect(() => {
+    const oldRect = dropRectRef.current;
+    dropRectRef.current = null; // Always clear to prevent stale refs
+
+    if (!oldRect) return;
+    const el = cardRef.current;
+    if (!el) return;
+
+    const newRect = el.getBoundingClientRect();
+    const dx = oldRect.left - newRect.left;
+    const dy = oldRect.top - newRect.top;
 
     // If the delta is negligible, skip animation
-    if (Math.abs(delta) < 1) return;
+    if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
 
     // Invert: place card at its old visual position (no transition)
-    el.style.transform = `translateX(${delta}px)`;
+    el.style.transform = `translate(${dx}px, ${dy}px)`;
     el.style.transition = 'none';
 
     // Force reflow so the browser registers the starting position
@@ -183,7 +188,7 @@ export function EntryCard({
 
     // Play: animate to final position
     el.style.transition = 'transform 200ms ease-out';
-    el.style.transform = 'translateX(0)';
+    el.style.transform = 'translate(0, 0)';
 
     const cleanup = () => {
       el.style.transform = '';
@@ -194,10 +199,11 @@ export function EntryCard({
     return () => {
       el.removeEventListener('transitionend', cleanup);
     };
-  }, [style.left]);
+  }, [styleLeft, styleVertical]);
 
+  // Keep transitions active even during drag — drag uses transform which doesn't conflict
   const transitionStyle =
-    isZooming || isDragging ? {} : { transition: 'left 150ms ease-out, top 150ms ease-out, bottom 150ms ease-out' };
+    isZooming ? {} : { transition: 'left 150ms ease-out, top 150ms ease-out, bottom 150ms ease-out' };
   const dragStyle = isDragging
     ? { transform: `translateX(${dragOffsetX}px)`, zIndex: 50, cursor: 'grabbing' }
     : {};
