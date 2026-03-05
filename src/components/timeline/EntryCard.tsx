@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback, useEffect, useLayoutEffect } from 'react';
+import { flushSync } from 'react-dom';
 import dayjs from 'dayjs';
 import { ClientLogo } from '@/components/clients/ClientLogo';
 import { getAbbreviation } from '@/lib/programAbbreviations';
@@ -144,13 +145,16 @@ export function EntryCard({
           if (cardRef.current) {
             dropRectRef.current = cardRef.current.getBoundingClientRect();
           }
-          updateOutreach.mutate({ id: entry.id, data: { dateSent: newDate } });
-          // Hold drag transform for one frame so the optimistic layout update
-          // propagates before we release — prevents snap-back to old position
-          setDragTargetDate('');
-          requestAnimationFrame(() => {
+          // flushSync forces the optimistic data update AND drag state clear
+          // into a single synchronous render. Without this, React can paint an
+          // intermediate frame where style.left has the NEW position but the
+          // drag transform is still applied — placing the card at roughly
+          // 2× the drag distance (the "teleport" glitch).
+          flushSync(() => {
+            updateOutreach.mutate({ id: entry.id, data: { dateSent: newDate } });
             setIsDragging(false);
             setDragOffsetX(0);
+            setDragTargetDate('');
           });
         } else {
           setIsDragging(false);
