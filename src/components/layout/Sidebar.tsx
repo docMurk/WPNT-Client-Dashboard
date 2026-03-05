@@ -12,13 +12,12 @@ export function Sidebar() {
   return (
     <aside className="flex flex-col border-r border-wpnt-border bg-wpnt-surface w-16">
       {/* Logo area */}
-      <div className="flex flex-col h-20 items-center justify-center border-b border-wpnt-border px-4">
+      <div className="flex h-16 items-center justify-center border-b border-wpnt-border px-4">
         <img
           src={wpntLogo}
           alt="WPNT Communications"
           className="h-8 w-10 object-contain"
         />
-        <span style={{ color: 'red', fontSize: 10, fontWeight: 'bold' }}>v{APP_VERSION}</span>
       </div>
 
       {/* Nav items */}
@@ -41,8 +40,8 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="pb-2 text-center">
-        <span style={{ color: 'red', fontSize: 14, fontWeight: 'bold' }}>
+      <div className="pb-3 text-center">
+        <span className="text-[9px] text-wpnt-text/50">
           v{APP_VERSION}
         </span>
       </div>
