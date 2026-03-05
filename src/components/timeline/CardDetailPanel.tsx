@@ -73,7 +73,7 @@ export function CardDetailPanel({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-6 py-8 space-y-6">
+        <div className="px-4 py-8 space-y-6">
           {/* Header: Logo + Name */}
           <div className="flex items-center gap-3">
             <ClientLogo clientId={entry.clientId} size={36} />

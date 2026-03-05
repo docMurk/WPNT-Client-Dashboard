@@ -229,15 +229,15 @@ export function EntryCard({
         onPointerDown={handleCardPointerDown}
         onPointerMove={handleCardPointerMove}
         onPointerUp={handleCardPointerUp}
-        className={`flex flex-col items-center gap-0.5 rounded-xl border border-wpnt-border bg-white shadow-md px-3.5 pt-3.5 pb-2.5 cursor-pointer hover:shadow-lg transition-shadow select-none ${
+        className={`flex flex-col items-center gap-0.5 rounded-xl border border-wpnt-border bg-white shadow-md px-3.5 pt-3.5 pb-2.5 overflow-hidden cursor-pointer hover:shadow-lg transition-shadow select-none ${
           isDragging ? 'shadow-xl ring-2 ring-wpnt-blue/30' : isAging ? 'ring-2 ring-status-declined/40' : ''
         } ${isExpanded ? 'ring-2 ring-wpnt-blue/40' : ''}`}
-        style={{ width: CARD_WIDTH, minHeight: CARD_HEIGHT - 10 }}
+        style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
       >
         <ClientLogo clientId={entry.clientId} size={36} showLabel />
 
         <div className="flex items-center gap-1 mt-0.5">
-          <span className="text-[10px] text-wpnt-text">
+          <span className="text-[10px] text-wpnt-text whitespace-nowrap">
             {dateLabel}
             {abbrev && <span className="font-semibold"> - {abbrev}</span>}
           </span>

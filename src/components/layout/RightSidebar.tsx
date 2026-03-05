@@ -152,12 +152,12 @@ export function RightSidebar() {
       >
         <div className="w-80 min-w-[320px]">
           {/* Title */}
-          <div className="px-6 py-6 border-b border-wpnt-border">
+          <div className="px-4 py-6 border-b border-wpnt-border">
             <h2 className="text-sm font-semibold text-wpnt-blue">Client Engagement</h2>
           </div>
 
           {/* Search */}
-          <div className="px-6 py-6 border-b border-wpnt-border">
+          <div className="px-4 py-6 border-b border-wpnt-border">
             <div className="relative">
               <Search
                 size={14}
@@ -182,7 +182,7 @@ export function RightSidebar() {
           </div>
 
           {/* Type */}
-          <div className="px-6 py-6 border-b border-wpnt-border">
+          <div className="px-4 py-6 border-b border-wpnt-border">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text mb-3.5 block">
               Type
             </span>
@@ -205,7 +205,7 @@ export function RightSidebar() {
           </div>
 
           {/* Status */}
-          <div className="px-6 py-6 border-b border-wpnt-border">
+          <div className="px-4 py-6 border-b border-wpnt-border">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text mb-3.5 block">
               Status
             </span>
@@ -228,7 +228,7 @@ export function RightSidebar() {
           </div>
 
           {/* Client */}
-          <div className="px-6 py-6 border-b border-wpnt-border">
+          <div className="px-4 py-6 border-b border-wpnt-border">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text mb-3.5 block">
               Client
             </span>
@@ -243,7 +243,7 @@ export function RightSidebar() {
           </div>
 
           {/* Program */}
-          <div className="px-6 py-6 border-b border-wpnt-border">
+          <div className="px-4 py-6 border-b border-wpnt-border">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text mb-3.5 block">
               Program
             </span>
@@ -258,7 +258,7 @@ export function RightSidebar() {
           </div>
 
           {/* Timeline View */}
-          <div className="px-6 py-6 border-b border-wpnt-border">
+          <div className="px-4 py-6 border-b border-wpnt-border">
             <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text mb-2 block">
               View
             </span>
@@ -297,7 +297,7 @@ export function RightSidebar() {
           </div>
 
           {/* Quarter info */}
-          <div className="px-6 py-6 border-b border-wpnt-border">
+          <div className="px-4 py-6 border-b border-wpnt-border">
             <div className="flex items-center justify-between">
               <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text">
                 Q{currentQuarter} Proposed
@@ -309,7 +309,7 @@ export function RightSidebar() {
           </div>
 
           {/* New Entry button */}
-          <div className="px-6 py-6 border-b border-wpnt-border">
+          <div className="px-4 py-6 border-b border-wpnt-border">
             <button
               onClick={() => openForm()}
               className="flex w-full items-center justify-center gap-1.5 rounded-lg bg-wpnt-blue px-3 py-2 text-sm font-medium text-white hover:bg-wpnt-blue/90 transition-colors"
@@ -321,7 +321,7 @@ export function RightSidebar() {
 
           {/* Reset */}
           {hasActiveFilters && (
-            <div className="px-6 py-6">
+            <div className="px-4 py-6">
               <button
                 onClick={resetFilters}
                 className="flex w-full items-center justify-center gap-1 rounded-md border border-wpnt-border bg-white px-2 py-1.5 text-xs text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30 transition-all"
