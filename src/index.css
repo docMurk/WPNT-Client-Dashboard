@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  /* WPNT Brand Colors */
+  --color-wpnt-blue: #1F4E78;
+  --color-wpnt-text: #595959;
+  --color-wpnt-body: #1A1A1A;
+  --color-wpnt-surface: #F8F9FB;
+  --color-wpnt-border: #E2E5EB;
+  --color-wpnt-alt-row: #F3F5F8;
+  --color-wpnt-canvas: #EEF1F7;
+
+  /* Outreach Type Accents */
+  --color-proposal: #4472C4;
+  --color-follow-up: #70AD47;
+  /* Status Colors */
+  --color-status-open: #4472C4;
+  --color-status-accepted: #70AD47;
+  --color-status-declined: #E74C3C;
+  --color-status-no-response: #9E9E9E;
+  --color-status-other: #F5A623;
+
+  /* Sidebar */
+  --color-sidebar-active: #E8EDF5;
+
+  /* Radii */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--color-wpnt-body);
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
