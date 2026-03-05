@@ -187,7 +187,7 @@ export function EntryCard({
     el.getBoundingClientRect();
 
     // Play: animate to final position
-    el.style.transition = 'transform 200ms ease-out';
+    el.style.transition = 'transform 400ms ease-out';
     el.style.transform = 'translate(0, 0)';
 
     const cleanup = () => {
@@ -203,7 +203,7 @@ export function EntryCard({
 
   // Keep transitions active even during drag — drag uses transform which doesn't conflict
   const transitionStyle =
-    isZooming ? {} : { transition: 'left 150ms ease-out, top 150ms ease-out, bottom 150ms ease-out' };
+    isZooming ? {} : { transition: 'left 300ms ease-out, top 300ms ease-out, bottom 300ms ease-out' };
   const dragStyle = isDragging
     ? { transform: `translateX(${dragOffsetX}px)`, zIndex: 50, cursor: 'grabbing' }
     : {};

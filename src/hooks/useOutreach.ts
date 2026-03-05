@@ -71,6 +71,13 @@ export function useUpdateOutreach() {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: Partial<OutreachEntry> }) =>
       Promise.resolve(updateOutreachEntry(id, data)),
+    onMutate: ({ id, data }) => {
+      // Optimistic update: apply changes to cache immediately so layout
+      // recalculates in the same render cycle (prevents drop-position blink)
+      qc.setQueryData<OutreachEntry[]>(['outreach'], (old) =>
+        old?.map((entry) => (entry.id === id ? { ...entry, ...data } : entry)),
+      );
+    },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['outreach'] });
     },
