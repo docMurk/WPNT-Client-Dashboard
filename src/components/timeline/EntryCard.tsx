@@ -179,8 +179,11 @@ export function EntryCard({
 
   // Before paint: compare old rect to new rect, animate delta via transform
   useLayoutEffect(() => {
-    if (isZooming || isDragging) {
+    if (isZooming) {
       dropRectRef.current = null;
+      return;
+    }
+    if (isDragging) {
       return;
     }
 
