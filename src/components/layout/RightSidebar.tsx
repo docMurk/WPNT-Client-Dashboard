@@ -137,10 +137,12 @@ export function RightSidebar() {
       {/* Toggle button — always visible on the edge */}
       <button
         onClick={toggleRightSidebar}
-        className="absolute top-4 z-30 flex h-20 w-14 items-center justify-center rounded-l-md border border-r-0 border-wpnt-border bg-white shadow-md text-wpnt-text hover:bg-wpnt-surface hover:shadow-lg transition-all"
+        className="absolute top-4 z-30 flex h-20 w-10 items-center justify-center rounded-l-md border border-r-0 border-wpnt-border bg-gradient-to-r from-gray-50 to-white shadow-md text-wpnt-text hover:from-gray-100 hover:to-gray-50 hover:shadow-lg active:from-gray-200 active:to-gray-100 transition-all"
         style={{ right: rightSidebarCollapsed ? 0 : 320 }}
       >
-        {rightSidebarCollapsed ? <ChevronLeft size={48} /> : <ChevronRight size={48} />}
+        <div className="rounded-sm border border-wpnt-border/40 p-0.5">
+          {rightSidebarCollapsed ? <ChevronLeft size={36} /> : <ChevronRight size={36} />}
+        </div>
       </button>
 
       {/* Sidebar panel */}

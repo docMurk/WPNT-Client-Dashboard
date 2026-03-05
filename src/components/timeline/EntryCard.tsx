@@ -145,12 +145,18 @@ export function EntryCard({
             dropRectRef.current = cardRef.current.getBoundingClientRect();
           }
           updateOutreach.mutate({ id: entry.id, data: { dateSent: newDate } });
+          // Hold drag transform for one frame so the optimistic layout update
+          // propagates before we release — prevents snap-back to old position
+          setDragTargetDate('');
+          requestAnimationFrame(() => {
+            setIsDragging(false);
+            setDragOffsetX(0);
+          });
+        } else {
+          setIsDragging(false);
+          setDragOffsetX(0);
+          setDragTargetDate('');
         }
-
-        // Let React re-render with new layout position
-        setIsDragging(false);
-        setDragOffsetX(0);
-        setDragTargetDate('');
       } else if (wasState === 'pending') {
         setIsDragging(false);
         setDragOffsetX(0);
