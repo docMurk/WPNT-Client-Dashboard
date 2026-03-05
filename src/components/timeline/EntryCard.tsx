@@ -1,4 +1,4 @@
-import { useRef, useState, useCallback, useLayoutEffect } from 'react';
+import { useRef, useState, useCallback, useEffect, useLayoutEffect } from 'react';
 import dayjs from 'dayjs';
 import { ClientLogo } from '@/components/clients/ClientLogo';
 import { getAbbreviation } from '@/lib/programAbbreviations';
@@ -63,8 +63,9 @@ export function EntryCard({
   const [isDragging, setIsDragging] = useState(false);
   const [dragTargetDate, setDragTargetDate] = useState('');
 
-  // FLIP animation ref — stores visual bounding rect at drop time
-  const dropRectRef = useRef<DOMRect | null>(null);
+  // FLIP animation refs
+  const dropRectRef = useRef<DOMRect | null>(null);  // drop-specific rect (dragged card)
+  const prevRectRef = useRef<DOMRect | null>(null);  // last-painted rect (all cards)
 
   const updateOutreach = useUpdateOutreach();
 
@@ -159,35 +160,48 @@ export function EntryCard({
     [pixelToDate, entry.dateSent, entry.id, updateOutreach, onToggle],
   );
 
-  // FLIP animation: after layout updates, animate from drop position to final position
-  // Track both horizontal and vertical position for 2D FLIP
+  // Universal FLIP animation: captures rect after every paint, animates any position change
   const styleLeft = (style.left as number) || 0;
   const styleVertical = ((style.bottom ?? style.top) as number) || 0;
 
-  useLayoutEffect(() => {
-    const oldRect = dropRectRef.current;
-    dropRectRef.current = null; // Always clear to prevent stale refs
+  // Capture card rect after every paint (for non-dragged cards and between drags)
+  useEffect(() => {
+    if (cardRef.current && !isDragging) {
+      prevRectRef.current = cardRef.current.getBoundingClientRect();
+    }
+  });
 
-    if (!oldRect) return;
+  // Before paint: compare old rect to new rect, animate delta via transform
+  useLayoutEffect(() => {
+    if (isZooming || isDragging) {
+      dropRectRef.current = null;
+      return;
+    }
+
     const el = cardRef.current;
     if (!el) return;
+
+    // Prefer drop rect (dragged card) over previous paint rect (all cards)
+    const oldRect = dropRectRef.current ?? prevRectRef.current;
+    dropRectRef.current = null;
+
+    if (!oldRect) return;
 
     const newRect = el.getBoundingClientRect();
     const dx = oldRect.left - newRect.left;
     const dy = oldRect.top - newRect.top;
 
-    // If the delta is negligible, skip animation
     if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
 
-    // Invert: place card at its old visual position (no transition)
+    // Invert: place card at its old visual position
     el.style.transform = `translate(${dx}px, ${dy}px)`;
     el.style.transition = 'none';
 
-    // Force reflow so the browser registers the starting position
+    // Force reflow
     el.getBoundingClientRect();
 
     // Play: animate to final position
-    el.style.transition = 'transform 400ms ease-out';
+    el.style.transition = 'transform 300ms ease-out';
     el.style.transform = 'translate(0, 0)';
 
     const cleanup = () => {
@@ -196,14 +210,8 @@ export function EntryCard({
     };
     el.addEventListener('transitionend', cleanup, { once: true });
 
-    return () => {
-      el.removeEventListener('transitionend', cleanup);
-    };
-  }, [styleLeft, styleVertical]);
-
-  // Keep transitions active even during drag — drag uses transform which doesn't conflict
-  const transitionStyle =
-    isZooming ? {} : { transition: 'left 300ms ease-out, top 300ms ease-out, bottom 300ms ease-out' };
+    return () => el.removeEventListener('transitionend', cleanup);
+  }, [styleLeft, styleVertical, isZooming, isDragging]);
   const dragStyle = isDragging
     ? { transform: `translateX(${dragOffsetX}px)`, zIndex: 50, cursor: 'grabbing' }
     : {};
@@ -212,7 +220,7 @@ export function EntryCard({
     <div
       ref={cardRef}
       className="absolute"
-      style={{ ...style, ...transitionStyle, ...dragStyle }}
+      style={{ ...style, ...dragStyle }}
     >
       {/* Date tooltip during drag */}
       {isDragging && dragTargetDate && (
