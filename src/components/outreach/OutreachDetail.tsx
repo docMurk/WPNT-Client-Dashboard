@@ -129,7 +129,7 @@ export function OutreachDetail() {
 
       {/* Panel */}
       <div
-        className="fixed right-0 top-0 z-50 flex h-full w-[480px] flex-col border-l border-wpnt-border bg-[#FAFBFD] shadow-xl transition-transform duration-200 ease-out"
+        className="fixed right-0 top-0 z-50 flex h-full w-[480px] flex-col border-l border-wpnt-border bg-[#FAFBFD] shadow-2xl transition-transform duration-200 ease-out"
         style={{ transform: isVisible ? 'translateX(0)' : 'translateX(100%)' }}
       >
         {/* Header */}
@@ -181,13 +181,13 @@ export function OutreachDetail() {
         <div className="flex-1 overflow-y-auto px-8 py-6 space-y-6">
           {/* Status */}
           <Section title="Status">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {(['Open', 'Accepted', 'Declined', 'No Response', 'Other'] as OutreachStatus[]).map(
                 (status) => (
                   <button
                     key={status}
                     onClick={() => handleStatusChange(status)}
-                    className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                    className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium whitespace-nowrap transition-colors ${
                       entry.status === status
                         ? 'border-transparent text-white ' + STATUS_COLORS[status]
                         : 'border-wpnt-border text-wpnt-text hover:bg-wpnt-surface'
@@ -294,6 +294,9 @@ export function OutreachDetail() {
             <DetailRow label="Owner" value={entry.crmOwner || 'Not assigned'} />
           </Section>
 
+          {/* Spacer: visual break after Owner */}
+          <div className="h-3.5" />
+
           {/* Client Contact */}
           {entry.contactName && (
             <Section title="Client Contact">
@@ -308,6 +311,9 @@ export function OutreachDetail() {
               </div>
             </Section>
           )}
+
+          {/* Spacer: visual break after Title */}
+          <div className="h-3.5" />
 
           {/* Notes */}
           {entry.notes && (
