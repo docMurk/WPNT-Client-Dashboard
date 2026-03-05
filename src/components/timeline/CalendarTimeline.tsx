@@ -39,13 +39,17 @@ export function CalendarTimelineView() {
   // Container width measurement
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerWidth, setContainerWidth] = useState(0);
+  const [containerHeight, setContainerHeight] = useState(0);
 
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     const observer = new ResizeObserver((entries) => {
       const entry = entries[0];
-      if (entry) setContainerWidth(entry.contentRect.width);
+      if (entry) {
+        setContainerWidth(entry.contentRect.width);
+        setContainerHeight(entry.contentRect.height);
+      }
     });
     observer.observe(el);
     return () => observer.disconnect();
@@ -176,16 +180,19 @@ export function CalendarTimelineView() {
     setVisibleTimeEnd(now + span / 2);
   }, [visibleTimeStart, visibleTimeEnd]);
 
-  // Region heights — force minimum proposal height for stable axis position
+  // Region heights — proportional split so axis stays at ~75% on all screen sizes
   const MIN_PROPOSAL_HEIGHT = 3 * STACK_OFFSET + 40;
-  const proposalHeight = Math.max(
+  const proposalMinContent = Math.max(
     MIN_PROPOSAL_HEIGHT,
     layout.maxProposalStack * STACK_OFFSET + 40,
   );
-  const followUpHeight = Math.max(
+  const followUpMinContent = Math.max(
     CARD_HEIGHT + 40,
     layout.maxFollowUpStack * STACK_OFFSET + 40,
   );
+  const availableHeight = containerHeight - 40; // minus axis height
+  const proposalHeight = Math.max(proposalMinContent, availableHeight * 0.75);
+  const followUpHeight = Math.max(followUpMinContent, availableHeight * 0.25);
 
   // Year boundary lines (Jan 1 of each year)
   const yearBoundaryLines = useMemo(() => {

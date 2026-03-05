@@ -30,11 +30,6 @@
   --radius-xl: 0.75rem;
 }
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
