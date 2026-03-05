@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router';
 import { CalendarRange, History } from 'lucide-react';
 import wpntLogo from '@/assets/wpnt-logo.png';
+import { APP_VERSION } from '@/version';
 
 const navItems = [
   { to: '/', label: 'Timeline', icon: CalendarRange },
@@ -38,6 +39,12 @@ export function Sidebar() {
           </NavLink>
         ))}
       </nav>
+
+      <div className="mt-auto pb-3 text-center">
+        <span className="text-[11px] font-medium text-wpnt-text">
+          v{APP_VERSION}
+        </span>
+      </div>
     </aside>
   );
 }
