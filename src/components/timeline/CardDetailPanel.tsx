@@ -5,7 +5,7 @@ import { getAbbreviation } from '@/lib/programAbbreviations';
 import type { OutreachEntry } from '@/types/outreach';
 import { CARD_WIDTH } from '@/hooks/useTimelineLayout';
 
-const PANEL_WIDTH = 300;
+const PANEL_WIDTH = 340;
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', {
@@ -73,7 +73,7 @@ export function CardDetailPanel({
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="px-8 py-7 space-y-5">
+        <div className="px-10 py-8 space-y-6">
           {/* Header: Logo + Name */}
           <div className="flex items-center gap-3">
             <ClientLogo clientId={entry.clientId} size={36} />
