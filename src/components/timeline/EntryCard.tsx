@@ -1,5 +1,4 @@
 import { useRef, useState, useCallback, useEffect, useLayoutEffect } from 'react';
-import { flushSync } from 'react-dom';
 import dayjs from 'dayjs';
 import { ClientLogo } from '@/components/clients/ClientLogo';
 import { getAbbreviation } from '@/lib/programAbbreviations';
@@ -64,9 +63,14 @@ export function EntryCard({
   const [isDragging, setIsDragging] = useState(false);
   const [dragTargetDate, setDragTargetDate] = useState('');
 
+  // Pending drop: keeps drag transform alive until the parent re-renders
+  // with the new layout position, preventing the "teleport" glitch.
+  const pendingDropRectRef = useRef<DOMRect | null>(null);
+  const pendingDropDateRef = useRef<string | null>(null);
+
   // FLIP animation refs
-  const dropRectRef = useRef<DOMRect | null>(null);  // drop-specific rect (dragged card)
-  const prevRectRef = useRef<DOMRect | null>(null);  // last-painted rect (all cards)
+  const dropRectRef = useRef<DOMRect | null>(null);
+  const prevRectRef = useRef<DOMRect | null>(null);
 
   const updateOutreach = useUpdateOutreach();
 
@@ -141,21 +145,16 @@ export function EntryCard({
         const newDate = pixelToDate(newLeft);
 
         if (newDate !== entry.dateSent) {
-          // Capture visual rect before layout changes for 2D FLIP animation
+          // Capture visual rect for FLIP animation after layout settles
           if (cardRef.current) {
-            dropRectRef.current = cardRef.current.getBoundingClientRect();
+            pendingDropRectRef.current = cardRef.current.getBoundingClientRect();
           }
-          // flushSync forces the optimistic data update AND drag state clear
-          // into a single synchronous render. Without this, React can paint an
-          // intermediate frame where style.left has the NEW position but the
-          // drag transform is still applied — placing the card at roughly
-          // 2× the drag distance (the "teleport" glitch).
-          flushSync(() => {
-            updateOutreach.mutate({ id: entry.id, data: { dateSent: newDate } });
-            setIsDragging(false);
-            setDragOffsetX(0);
-            setDragTargetDate('');
-          });
+          pendingDropDateRef.current = newDate;
+          // Fire mutation — onMutate applies optimistic cache update.
+          // Keep isDragging=true so the drag transform holds the card in place
+          // until the parent re-renders with the new layout position.
+          updateOutreach.mutate({ id: entry.id, data: { dateSent: newDate } });
+          setDragTargetDate('');
         } else {
           setIsDragging(false);
           setDragOffsetX(0);
@@ -169,6 +168,26 @@ export function EntryCard({
     },
     [pixelToDate, entry.dateSent, entry.id, updateOutreach, onToggle],
   );
+
+  // --- Pending drop resolution ---
+  // When the parent re-renders with updated entry.dateSent (from the optimistic
+  // cache update), this effect fires BEFORE the browser paints. It transfers
+  // the captured drop rect to dropRectRef and clears isDragging — triggering
+  // a synchronous re-render where the card is at its correct new layout
+  // position with no drag transform. The FLIP effect then animates from the
+  // drop position to the final position (usually a tiny or zero delta).
+  // This MUST be declared before the FLIP useLayoutEffect.
+  useLayoutEffect(() => {
+    if (!pendingDropDateRef.current) return;
+    if (entry.dateSent !== pendingDropDateRef.current) return;
+
+    // The parent has re-rendered with the new position — safe to release drag
+    dropRectRef.current = pendingDropRectRef.current;
+    pendingDropRectRef.current = null;
+    pendingDropDateRef.current = null;
+    setIsDragging(false);
+    setDragOffsetX(0);
+  });
 
   // Universal FLIP animation: captures rect after every paint, animates any position change
   const styleLeft = (style.left as number) || 0;
@@ -225,6 +244,7 @@ export function EntryCard({
 
     return () => el.removeEventListener('transitionend', cleanup);
   }, [styleLeft, styleVertical, isZooming, isDragging]);
+
   const dragStyle = isDragging
     ? { transform: `translateX(${dragOffsetX}px)`, zIndex: 50, cursor: 'grabbing' }
     : {};
