@@ -217,7 +217,7 @@ const PROPOSALS: ProposalDef[] = [
   },
   {
     num: 17, clientId: 'c-exxonmobil', clientName: 'ExxonMobil',
-    program: 'PS', programName: 'Presentation Skills',
+    program: 'CCT', programName: 'Crisis Communication Training',
     description: 'EMbassador communications workshop series for ExxonMobil representatives',
     dateSent: '2025-05-05',
     filename: 'EMbassador Communications Workshop Series Overview(WPNT Communications).pdf',
@@ -418,7 +418,16 @@ const MSG_CLIENT_MAP: Record<string, string> = {
 // Dollar amount extraction from DOCX text
 // ---------------------------------------------------------------------------
 
-async function tryExtractDollarAmounts(filePath: string): Promise<{ min: number | null; max: number | null }> {
+interface DollarResult {
+  min: number | null;
+  max: number | null;
+  pricingStructure: 'option' | 'package' | 'unknown';
+  needsReview: boolean;
+  reviewReason: string;
+}
+
+async function tryExtractDollarAmounts(filePath: string): Promise<DollarResult> {
+  const EMPTY: DollarResult = { min: null, max: null, pricingStructure: 'unknown', needsReview: false, reviewReason: '' };
   const ext = path.extname(filePath).toLowerCase();
   let text = '';
 
@@ -428,46 +437,156 @@ async function tryExtractDollarAmounts(filePath: string): Promise<{ min: number 
       const result = await mammoth.default.extractRawText({ path: filePath });
       text = result.value;
     } else if (ext === '.pdf') {
-      // unpdf may not work reliably for all PDFs in Node
       try {
         const { extractText } = await import('unpdf');
         const buffer = fs.readFileSync(filePath);
         const result = await extractText(new Uint8Array(buffer));
         text = String(result.text ?? '');
       } catch {
-        return { min: null, max: null };
+        return EMPTY;
       }
     }
   } catch {
-    return { min: null, max: null };
+    return EMPTY;
   }
 
-  if (!text) return { min: null, max: null };
+  if (!text) return EMPTY;
 
-  // Look for dollar amounts — focus on professional fees, ignore travel/per-person
+  // Look for dollar amounts — focus on professional/program fees.
+  //
+  // IMPORTANT: WPNT proposals contain "per person" / "per participant" fees
+  // that are much smaller than the actual program fees. These are "trap" figures
+  // that must be excluded. The minimum should be the Option 1 program fee,
+  // NOT the per-person cost.
+  //
   // Common patterns: $XX,XXX  or  $XX,XXX.XX
   const dollarRegex = /\$[\d,]+(?:\.\d{2})?/g;
-  const amounts: number[] = [];
+  const labeledProgramFees: number[] = [];  // amounts near "program fee" / "coaching fee" labels
+  const programFees: number[] = [];          // amounts NOT near trap/add-on keywords
+  const perPersonFees: number[] = [];        // amounts near trap keywords (excluded)
+
+  // Per-person / trap-figure context keywords (case-insensitive check on surrounding text)
+  const PER_PERSON_KEYWORDS = [
+    'per person', 'per participant', 'cost per', 'per attendee',
+    'per individual', 'per executive', 'equivalent per person',
+    'per-person', 'per-participant',
+  ];
+
+  // Add-on / optional service keywords — these fees should be excluded from
+  // the baseline program fee. The min should be the core program/coaching fee.
+  const ADDON_KEYWORDS = [
+    'personalized communications improvement plan', 'pcip',
+    'video review', 'video analysis',
+    'add-on', 'add on', 'optional',
+  ];
+
+  // Priority labels — amounts near these are the TRUE program fees and should
+  // be preferred when determining the baseline min.
+  const PROGRAM_FEE_LABELS = [
+    'program fee', 'coaching fee', 'professional fee',
+    'training fee', 'workshop fee',
+  ];
+
+  const textLower = text.toLowerCase();
 
   for (const match of String(text).matchAll(dollarRegex)) {
     const val = parseFloat(match[0].replace(/[$,]/g, ''));
     // Filter: likely professional fee range ($1,000 - $500,000)
-    if (val >= 1000 && val <= 500000) {
-      amounts.push(val);
+    if (val < 1000 || val > 500000) continue;
+
+    // Check surrounding context (~150 chars before and after) for per-person indicators
+    const start = Math.max(0, match.index! - 150);
+    const end = Math.min(textLower.length, match.index! + match[0].length + 150);
+    const context = textLower.slice(start, end);
+
+    const isPerPerson = PER_PERSON_KEYWORDS.some(kw => context.includes(kw));
+    const isAddOn = ADDON_KEYWORDS.some(kw => context.includes(kw));
+    const isProgramFee = PROGRAM_FEE_LABELS.some(kw => context.includes(kw));
+
+    if (isPerPerson || isAddOn) {
+      perPersonFees.push(val);
+    } else if (isProgramFee) {
+      labeledProgramFees.push(val);
+      programFees.push(val);
+    } else {
+      programFees.push(val);
     }
   }
 
-  if (amounts.length === 0) return { min: null, max: null };
+  // Priority: labeled program fees > unlabeled program fees > trap fees (last resort)
+  const fees = labeledProgramFees.length > 0
+    ? labeledProgramFees
+    : programFees.length > 0
+      ? programFees
+      : perPersonFees;
 
-  // Sort and take min/max — these represent the fee range
-  amounts.sort((a, b) => a - b);
+  if (fees.length === 0) return EMPTY;
 
-  // If we have a clear min/max pair, use it
-  if (amounts.length >= 2) {
-    return { min: amounts[0], max: amounts[amounts.length - 1] };
+  // ---------------------------------------------------------------------------
+  // Detect pricing structure: option-based vs. package
+  // ---------------------------------------------------------------------------
+
+  // Option indicators — client picks ONE
+  const OPTION_KEYWORDS = [
+    'option 1', 'option 2', 'option 3', 'option a', 'option b',
+    'choose from', 'select from', 'either option',
+  ];
+
+  // Package indicators — client buys ALL components
+  const PACKAGE_KEYWORDS = [
+    'four 90-minute', 'three 90-minute', 'two 90-minute',
+    'part 1', 'part 2', 'part 3', 'part 4',
+    'phase 1', 'phase 2', 'phase 3',
+    'program 1', 'program 2', 'program a', 'program b',
+    'series of', 'workshop series', 'session 1', 'session 2',
+    'over four months', 'over three months', 'over six months',
+    'multi-session', 'multi-part', 'bundled',
+  ];
+
+  const hasOptionSignals = OPTION_KEYWORDS.some(kw => textLower.includes(kw));
+  const hasPackageSignals = PACKAGE_KEYWORDS.some(kw => textLower.includes(kw));
+
+  let pricingStructure: 'option' | 'package' | 'unknown' = 'unknown';
+  let needsReview = false;
+  let reviewReason = '';
+
+  if (hasOptionSignals && hasPackageSignals) {
+    // Ambiguous — both signals present
+    pricingStructure = 'unknown';
+    needsReview = true;
+    reviewReason = 'REVIEW: Both option and package signals detected — verify pricing structure';
+  } else if (hasPackageSignals) {
+    pricingStructure = 'package';
+  } else if (hasOptionSignals) {
+    pricingStructure = 'option';
+  } else if (fees.length >= 4) {
+    // Many distinct fee amounts with no clear structure — flag for review
+    needsReview = true;
+    reviewReason = `REVIEW: ${fees.length} fee amounts found but no clear option/package structure`;
   }
-  // Single amount
-  return { min: amounts[0], max: amounts[0] };
+
+  // Sort fees
+  fees.sort((a, b) => a - b);
+
+  let min: number;
+  let max: number;
+
+  if (pricingStructure === 'package') {
+    // Package: min = smallest single fee, max = sum of all fees
+    min = fees[0];
+    max = fees.reduce((sum, f) => sum + f, 0);
+    if (!needsReview) {
+      // Still flag packages for review since summing is a heuristic
+      needsReview = true;
+      reviewReason = `REVIEW: Detected as package (${fees.length} components, summed max=$${max.toLocaleString()}) — verify`;
+    }
+  } else {
+    // Option-based or unknown: min = smallest, max = largest
+    min = fees[0];
+    max = fees.length >= 2 ? fees[fees.length - 1] : fees[0];
+  }
+
+  return { min, max, pricingStructure, needsReview, reviewReason };
 }
 
 // ---------------------------------------------------------------------------
@@ -587,6 +706,7 @@ async function main() {
     let dollarMax: number | null = null;
     let partMin: number | null = null;
     let partMax: number | null = null;
+    let entryNotes = '';
 
     // Try to extract data from file
     if (fs.existsSync(filePath)) {
@@ -598,8 +718,15 @@ async function main() {
       partMin = parts.min;
       partMax = parts.max;
 
+      // Flag entries that need manual review
+      if (dollars.needsReview) {
+        entryNotes = dollars.reviewReason;
+        console.log(`  ⚠️  #${p.num} ${p.clientName} — ${dollars.reviewReason}`);
+      }
+
+      const structLabel = dollars.pricingStructure !== 'unknown' ? ` [${dollars.pricingStructure}]` : '';
       const dollarStr = dollarMin || dollarMax
-        ? `$${dollarMin?.toLocaleString() ?? '?'} - $${dollarMax?.toLocaleString() ?? '?'}`
+        ? `$${dollarMin?.toLocaleString() ?? '?'} - $${dollarMax?.toLocaleString() ?? '?'}${structLabel}`
         : 'not found';
       const partStr = partMin || partMax
         ? `${partMin ?? '?'}-${partMax ?? '?'}`
@@ -630,7 +757,7 @@ async function main() {
       contactName: '[placeholder]',
       contactEmail: '[placeholder]',
       contactTitle: '',
-      notes: '',
+      notes: entryNotes,
       documentLink: '',
       sharepointLink: '',
       declineNotes: '',

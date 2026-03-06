@@ -29,7 +29,7 @@ export const useOutreachStore = create<OutreachUIState>((set) => ({
   isDetailOpen: false,
   isFormOpen: false,
   editingEntryId: null,
-  rightSidebarCollapsed: false,
+  rightSidebarCollapsed: true,
   expandedEntryId: null,
   prefillData: null,
   timelineZoomTo: null,

@@ -26,8 +26,8 @@ function getInitials(name: string): string {
 }
 
 const LOGO_PROVIDERS = [
-  (domain: string, size: number) => `https://img.logo.dev/${domain}?token=pk_anonymous&size=${size}`,
-  (domain: string) => `https://logo.clearbit.com/${domain}`,
+  (domain: string) => `https://api.companyenrich.com/logo/${domain}`,
+  (domain: string) => `https://logos.hunter.io/${domain}`,
   (domain: string) => `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
 ];
 
@@ -65,11 +65,18 @@ export function ClientLogo({ clientId, size = 32, className = '', showLabel = fa
 
   const initials = getInitials(client.name);
   const color = getInitialsColor(client.name);
-  const fetchSize = showLabel ? 120 : size * 2;
+
+  // Ignore stale cached URLs from defunct providers
+  const cachedUrl = client.logoUrl;
+  const isStaleCache = cachedUrl && (
+    cachedUrl.includes('logo.clearbit.com') ||
+    cachedUrl.includes('img.logo.dev')
+  );
+  const validCachedUrl = cachedUrl && !isStaleCache ? cachedUrl : '';
 
   const renderLogo = () => {
-    // Try cached logo URL first
-    if (client.logoUrl && !allFailed) {
+    // Try cached logo URL first (skip defunct provider URLs)
+    if (validCachedUrl && !allFailed) {
       return (
         <img
           src={client.logoUrl}
@@ -85,9 +92,9 @@ export function ClientLogo({ clientId, size = 32, className = '', showLabel = fa
     }
 
     // Try providers in cascade if we have a domain
-    if (client.clientDomain && !allFailed && !client.logoUrl) {
+    if (client.clientDomain && !allFailed && !validCachedUrl) {
       const provider = LOGO_PROVIDERS[providerIndex];
-      const logoUrl = provider(client.clientDomain, fetchSize);
+      const logoUrl = provider(client.clientDomain);
       return (
         <img
           src={logoUrl}
