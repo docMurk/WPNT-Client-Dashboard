@@ -268,10 +268,14 @@ export function OutreachDetail() {
                 {entry.programName && (
                   <DetailRow label="Program" value={entry.programName} />
                 )}
-                {entry.participantCount && (
+                {(entry.participantCount || entry.participantCountMax) && (
                   <DetailRow
                     label="Participants"
-                    value={entry.participantCount.toString()}
+                    value={
+                      entry.participantCount && entry.participantCountMax && entry.participantCount !== entry.participantCountMax
+                        ? `${entry.participantCount}-${entry.participantCountMax}`
+                        : (entry.participantCount || entry.participantCountMax || 0).toString()
+                    }
                   />
                 )}
                 {entry.programDescription && (

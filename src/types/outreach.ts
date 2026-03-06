@@ -22,6 +22,7 @@ export interface OutreachEntry {
   dollarAmountMin: number | null;
   dollarAmountMax: number | null;
   participantCount: number | null;
+  participantCountMax: number | null;
   programName: string;
   programDescription: string;
   status: OutreachStatus;
@@ -57,6 +58,7 @@ export interface OutreachFormData {
   dollarAmountMin: number | null;
   dollarAmountMax: number | null;
   participantCount: number | null;
+  participantCountMax: number | null;
   programName: string;
   programDescription: string;
   status: OutreachStatus;

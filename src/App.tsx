@@ -8,6 +8,29 @@ import { OutreachDetail } from '@/components/outreach/OutreachDetail';
 
 // Initialize data service (seeds localStorage on first load)
 import '@/lib/dataService';
+import { exportAllData, importAllData, clearAllData } from '@/lib/dataService';
+
+// Expose data utilities on window for console access
+declare global {
+  interface Window {
+    __wpntExport: () => string;
+    __wpntImport: (json: string) => void;
+    __wpntClear: () => void;
+  }
+}
+window.__wpntExport = () => {
+  const json = exportAllData();
+  console.log('Exported', JSON.parse(json).clients.length, 'clients and', JSON.parse(json).entries.length, 'entries');
+  return json;
+};
+window.__wpntImport = (json: string) => {
+  importAllData(json);
+  console.log('Imported data. Reload the page to see changes.');
+};
+window.__wpntClear = () => {
+  clearAllData();
+  console.log('All data cleared. Reload the page to see changes.');
+};
 
 const queryClient = new QueryClient({
   defaultOptions: {

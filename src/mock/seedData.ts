@@ -87,7 +87,7 @@ function generateId(): string {
   return Math.random().toString(36).substring(2, 10);
 }
 
-export const mockOutreachEntries: OutreachEntry[] = [
+const _rawEntries: Omit<OutreachEntry, 'participantCountMax'>[] = [
   // Weatherford — proposals
   {
     id: generateId(),
@@ -802,3 +802,5 @@ export const mockOutreachEntries: OutreachEntry[] = [
     isArchived: false,
   },
 ];
+
+export const mockOutreachEntries: OutreachEntry[] = _rawEntries.map(e => ({ ...e, participantCountMax: null }));

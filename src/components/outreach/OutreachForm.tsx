@@ -22,6 +22,7 @@ const formSchema = z.object({
   dollarAmountMin: z.number().nullable(),
   dollarAmountMax: z.number().nullable(),
   participantCount: z.number().nullable(),
+  participantCountMax: z.number().nullable(),
   programName: z.string(),
   programDescription: z.string(),
   status: z.enum(['Open', 'Accepted', 'Declined', 'No Response', 'Other'] as const),
@@ -49,6 +50,7 @@ const defaultValues: FormValues = {
   dollarAmountMin: null,
   dollarAmountMax: null,
   participantCount: null,
+  participantCountMax: null,
   programName: '',
   programDescription: '',
   status: 'Open',
@@ -115,6 +117,7 @@ export function OutreachForm() {
           dollarAmountMin: editingEntry.dollarAmountMin,
           dollarAmountMax: editingEntry.dollarAmountMax,
           participantCount: editingEntry.participantCount,
+          participantCountMax: editingEntry.participantCountMax,
           programName: editingEntry.programName,
           programDescription: editingEntry.programDescription,
           status: editingEntry.status,
@@ -209,6 +212,7 @@ export function OutreachForm() {
       dollarAmountMin: data.dollarAmountMin || null,
       dollarAmountMax: data.dollarAmountMax || null,
       participantCount: data.participantCount || null,
+      participantCountMax: data.participantCountMax || null,
       spendAmount: data.spendAmount || null,
     };
 
@@ -471,15 +475,27 @@ export function OutreachForm() {
                   className="mt-1 w-full rounded-md border border-wpnt-border px-3 py-1.5 text-sm outline-none focus:border-wpnt-blue focus:ring-1 focus:ring-wpnt-blue/30"
                 />
               </div>
-              <div>
-                <label className="text-xs font-medium text-wpnt-text">
-                  Participant Count
-                </label>
-                <input
-                  {...register('participantCount', { valueAsNumber: true })}
-                  type="number"
-                  className="mt-1 w-full rounded-md border border-wpnt-border px-3 py-1.5 text-sm outline-none focus:border-wpnt-blue focus:ring-1 focus:ring-wpnt-blue/30"
-                />
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="text-xs font-medium text-wpnt-text">
+                    Min Participants
+                  </label>
+                  <input
+                    {...register('participantCount', { valueAsNumber: true })}
+                    type="number"
+                    className="mt-1 w-full rounded-md border border-wpnt-border px-3 py-1.5 text-sm outline-none focus:border-wpnt-blue focus:ring-1 focus:ring-wpnt-blue/30"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-wpnt-text">
+                    Max Participants
+                  </label>
+                  <input
+                    {...register('participantCountMax', { valueAsNumber: true })}
+                    type="number"
+                    className="mt-1 w-full rounded-md border border-wpnt-border px-3 py-1.5 text-sm outline-none focus:border-wpnt-blue focus:ring-1 focus:ring-wpnt-blue/30"
+                  />
+                </div>
               </div>
               <div>
                 <label className="text-xs font-medium text-wpnt-text">

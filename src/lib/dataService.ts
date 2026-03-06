@@ -43,6 +43,9 @@ function runMigrations(): void {
     if (!('sharepointLink' in e)) { e.sharepointLink = ''; changed = true; }
     if (!('declineNotes' in e)) { e.declineNotes = ''; changed = true; }
     if (!('crmOwner' in e)) { e.crmOwner = ''; changed = true; }
+
+    // Migration 5: Add participantCountMax field
+    if (!('participantCountMax' in e)) { e.participantCountMax = null; changed = true; }
   }
 
   if (changed) localStorage.setItem(OUTREACH_KEY, JSON.stringify(entries));
@@ -151,4 +154,24 @@ export function archiveOutreachEntry(id: string): OutreachEntry | undefined {
 
 export function restoreOutreachEntry(id: string): OutreachEntry | undefined {
   return updateOutreachEntry(id, { isArchived: false });
+}
+
+// --- Export / Import / Clear ---
+
+export function exportAllData(): string {
+  return JSON.stringify({
+    clients: getClients(),
+    entries: getOutreachEntries(),
+  });
+}
+
+export function importAllData(json: string): void {
+  const data = JSON.parse(json);
+  if (data.clients) localStorage.setItem(CLIENTS_KEY, JSON.stringify(data.clients));
+  if (data.entries) localStorage.setItem(OUTREACH_KEY, JSON.stringify(data.entries));
+}
+
+export function clearAllData(): void {
+  localStorage.removeItem(CLIENTS_KEY);
+  localStorage.removeItem(OUTREACH_KEY);
 }

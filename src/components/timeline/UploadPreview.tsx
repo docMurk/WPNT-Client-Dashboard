@@ -146,6 +146,7 @@ export function UploadPreview({ result, onClose, onEntryCreated }: UploadPreview
         dollarAmountMin: dollarMin,
         dollarAmountMax: dollarMax,
         participantCount: isProposal ? (result.data as ExtractedProposal).participantCount : null,
+        participantCountMax: null,
         programName: programName.trim(),
         programDescription: isProposal ? (result.data as ExtractedProposal).programDescription : '',
         status: 'Open',
