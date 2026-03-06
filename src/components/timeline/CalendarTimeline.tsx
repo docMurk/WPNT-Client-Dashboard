@@ -536,6 +536,7 @@ export function CalendarTimelineView() {
               cardX={card.x}
               cardTop={cardTop}
               containerWidth={containerWidth}
+              containerHeight={containerHeight}
               onClose={collapseEntry}
               onEdit={() => {
                 collapseEntry();

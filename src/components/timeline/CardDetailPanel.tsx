@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Pencil, Eye } from 'lucide-react';
 import { ClientLogo } from '@/components/clients/ClientLogo';
 import { getAbbreviation } from '@/lib/programAbbreviations';
@@ -6,6 +6,7 @@ import type { OutreachEntry } from '@/types/outreach';
 import { CARD_WIDTH } from '@/hooks/useTimelineLayout';
 
 const PANEL_WIDTH = 340;
+const PANEL_MARGIN = 8;
 
 function formatDate(dateStr: string): string {
   return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', {
@@ -25,6 +26,7 @@ interface CardDetailPanelProps {
   cardX: number;
   cardTop: number;
   containerWidth: number;
+  containerHeight: number;
   onClose: () => void;
   onEdit: () => void;
   onViewFull: () => void;
@@ -35,15 +37,26 @@ export function CardDetailPanel({
   cardX,
   cardTop,
   containerWidth,
+  containerHeight,
   onClose,
   onEdit,
   onViewFull,
 }: CardDetailPanelProps) {
+  const panelRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
+  const [clampedTop, setClampedTop] = useState(cardTop);
 
   useEffect(() => {
     requestAnimationFrame(() => setVisible(true));
   }, []);
+
+  // After render, measure panel height and clamp so it stays within the container
+  useLayoutEffect(() => {
+    if (!panelRef.current) return;
+    const panelHeight = panelRef.current.getBoundingClientRect().height;
+    const maxTop = containerHeight - panelHeight - PANEL_MARGIN;
+    setClampedTop(Math.max(PANEL_MARGIN, Math.min(cardTop, maxTop)));
+  }, [cardTop, containerHeight]);
 
   // Position: to the right of the card, or left if near right edge
   const cardRight = cardX + CARD_WIDTH + 8;
@@ -62,11 +75,12 @@ export function CardDetailPanel({
 
       {/* Panel */}
       <div
+        ref={panelRef}
         className="absolute z-30 rounded-xl border border-wpnt-border bg-white shadow-xl"
         style={{
           width: PANEL_WIDTH,
           left,
-          top: cardTop,
+          top: clampedTop,
           transform: visible ? 'translateX(0)' : `translateX(${openRight ? '-10px' : '10px'})`,
           opacity: visible ? 1 : 0,
           transition: 'transform 150ms ease-out, opacity 150ms ease-out',
