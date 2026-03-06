@@ -290,16 +290,8 @@ export function OutreachDetail() {
             </Section>
           )}
 
-          {/* Separator between Description and CRM */}
-          <div className="border-t border-wpnt-border/50 my-1" />
-
           {/* CRM */}
-          <Section title="CRM">
-            <DetailRow label="Owner" value={entry.crmOwner || 'Not assigned'} />
-          </Section>
-
-          {/* Spacer: visual break after Owner */}
-          <div className="h-3.5" />
+          <DetailRow label="CRM" value={entry.crmOwner || 'Not assigned'} />
 
           {/* Client Contact */}
           {entry.contactName && (
