@@ -3,6 +3,8 @@ import { mockClients, mockOutreachEntries } from '@/mock/seedData';
 
 const CLIENTS_KEY = 'wpnt_clients';
 const OUTREACH_KEY = 'wpnt_outreach';
+const DATA_VERSION_KEY = 'wpnt_data_version';
+const CURRENT_DATA_VERSION = 2; // Bump this to force re-seed from seedData.ts
 
 function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
@@ -87,6 +89,15 @@ function runMigrations(): void {
       localStorage.setItem(CLIENTS_KEY, JSON.stringify(mockClients));
       localStorage.setItem(OUTREACH_KEY, JSON.stringify(mockOutreachEntries));
     }
+  }
+
+  // Migration 7: Version-based re-seed
+  // When CURRENT_DATA_VERSION is bumped, force re-seed with corrected seedData.
+  const storedVersion = parseInt(localStorage.getItem(DATA_VERSION_KEY) ?? '0', 10);
+  if (storedVersion < CURRENT_DATA_VERSION) {
+    localStorage.setItem(CLIENTS_KEY, JSON.stringify(mockClients));
+    localStorage.setItem(OUTREACH_KEY, JSON.stringify(mockOutreachEntries));
+    localStorage.setItem(DATA_VERSION_KEY, String(CURRENT_DATA_VERSION));
   }
 }
 
