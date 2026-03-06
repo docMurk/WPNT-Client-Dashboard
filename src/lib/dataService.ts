@@ -91,12 +91,56 @@ function runMigrations(): void {
     }
   }
 
-  // Migration 7: Version-based re-seed
-  // When CURRENT_DATA_VERSION is bumped, force re-seed with corrected seedData.
+  // Migration 7: Version-based merge
+  // When CURRENT_DATA_VERSION is bumped, merge corrected seed data into existing
+  // localStorage without wiping user changes (archives, edits, new entries).
   const storedVersion = parseInt(localStorage.getItem(DATA_VERSION_KEY) ?? '0', 10);
   if (storedVersion < CURRENT_DATA_VERSION) {
-    localStorage.setItem(CLIENTS_KEY, JSON.stringify(mockClients));
-    localStorage.setItem(OUTREACH_KEY, JSON.stringify(mockOutreachEntries));
+    // Build lookup of seed entries by ID
+    const seedEntryMap = new Map(mockOutreachEntries.map((e) => [e.id, e]));
+    const seedClientMap = new Map(mockClients.map((c) => [c.id, c]));
+
+    // Merge outreach entries: update seed-origin fields, preserve user fields
+    const currentEntries = JSON.parse(localStorage.getItem(OUTREACH_KEY) ?? '[]');
+    const currentIds = new Set(currentEntries.map((e: { id: string }) => e.id));
+    const mergedEntries = currentEntries.map((e: Record<string, unknown>) => {
+      const seed = seedEntryMap.get(e.id as string);
+      if (!seed) return e; // user-created entry, leave untouched
+      // Update extraction-derived fields from seed; preserve user-editable fields
+      return {
+        ...e,
+        dollarAmountMin: seed.dollarAmountMin,
+        dollarAmountMax: seed.dollarAmountMax,
+        programName: seed.programName,
+        notes: seed.notes || e.notes, // seed notes win if non-empty
+        // Preserve: isArchived, status, outcomeSpend, spendAmount, contactName/Email/Title, crmOwner, declineNotes
+      };
+    });
+    // Add any new seed entries not yet in localStorage
+    for (const seed of mockOutreachEntries) {
+      if (!currentIds.has(seed.id)) mergedEntries.push(seed);
+    }
+    localStorage.setItem(OUTREACH_KEY, JSON.stringify(mergedEntries));
+
+    // Merge clients: update seed fields, preserve user fields (logoUrl)
+    const currentClientsArr = JSON.parse(localStorage.getItem(CLIENTS_KEY) ?? '[]');
+    const currentClientIds = new Set(currentClientsArr.map((c: { id: string }) => c.id));
+    const mergedClients = currentClientsArr.map((c: Record<string, unknown>) => {
+      const seed = seedClientMap.get(c.id as string);
+      if (!seed) return c;
+      return {
+        ...c,
+        name: seed.name,
+        clientDomain: seed.clientDomain,
+        industry: seed.industry,
+        // Preserve: logoUrl (cached from provider), isActive
+      };
+    });
+    for (const seed of mockClients) {
+      if (!currentClientIds.has(seed.id)) mergedClients.push(seed);
+    }
+    localStorage.setItem(CLIENTS_KEY, JSON.stringify(mergedClients));
+
     localStorage.setItem(DATA_VERSION_KEY, String(CURRENT_DATA_VERSION));
   }
 }
