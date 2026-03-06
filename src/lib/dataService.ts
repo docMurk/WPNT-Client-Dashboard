@@ -70,6 +70,24 @@ function runMigrations(): void {
       localStorage.setItem(CLIENTS_KEY, JSON.stringify(filteredClients));
     }
   }
+
+  // Migration 6: Replace old mock data with real proposal data
+  // Detect old mock data by checking for legacy client IDs (c1-c10)
+  const currentClients = localStorage.getItem(CLIENTS_KEY);
+  if (currentClients) {
+    const clients = JSON.parse(currentClients);
+    const hasOldMockIds = clients.some((c: { id?: string }) =>
+      /^c\d+$/.test(c.id ?? '')
+    );
+    if (hasOldMockIds) {
+      // Clear old mock data — seedIfEmpty already ran above with the new data,
+      // but localStorage had old data so it didn't seed. Force re-seed now.
+      localStorage.removeItem(CLIENTS_KEY);
+      localStorage.removeItem(OUTREACH_KEY);
+      localStorage.setItem(CLIENTS_KEY, JSON.stringify(mockClients));
+      localStorage.setItem(OUTREACH_KEY, JSON.stringify(mockOutreachEntries));
+    }
+  }
 }
 
 // Initialize on import
