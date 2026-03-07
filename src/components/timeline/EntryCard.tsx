@@ -275,7 +275,7 @@ export function EntryCard({
         } ${isExpanded ? 'ring-2 ring-wpnt-blue/40' : ''}`}
         style={{ width: CARD_WIDTH, height: CARD_HEIGHT }}
       >
-        <ClientLogo clientId={entry.clientId} size={36} showLabel />
+        <ClientLogo clientId={entry.clientId} size={48} showLabel />
 
         <div className="flex items-center gap-1 mt-0.5">
           <span className="text-[10px] text-wpnt-text whitespace-nowrap">

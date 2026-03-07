@@ -130,7 +130,7 @@ export function ClientLogo({ clientId, size = 32, className = '', showLabel = fa
     <div className="flex flex-col items-center gap-1 pointer-events-none">
       {renderLogo()}
       <span
-        className="text-[10px] font-medium text-wpnt-body leading-tight text-center line-clamp-2"
+        className="text-[15px] font-medium text-wpnt-body leading-tight text-center line-clamp-2"
         style={{ maxWidth: size * 2.5, wordBreak: 'break-word' }}
       >
         {client.name}
