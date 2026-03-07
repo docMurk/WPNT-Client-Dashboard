@@ -278,14 +278,14 @@ export function EntryCard({
         <ClientLogo clientId={entry.clientId} size={48} showLabel />
 
         <div className="flex items-center gap-1 mt-0.5">
-          <span className="text-[10px] text-wpnt-text whitespace-nowrap">
+          <span className="text-[15px] text-wpnt-text whitespace-nowrap">
             {dateLabel}
             {abbrev && <span className="font-semibold"> - {abbrev}</span>}
           </span>
         </div>
 
         {dollarLabel && (
-          <span className="text-[10px] font-bold text-proposal">
+          <span className="text-[15px] font-bold text-proposal">
             {dollarLabel}
           </span>
         )}

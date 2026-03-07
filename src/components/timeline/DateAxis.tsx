@@ -144,7 +144,7 @@ export function DateAxis({
           {/* Label (only for major ticks) */}
           {!tick.isMinor && tick.label && (
             <span
-              className="absolute whitespace-nowrap text-[10px] text-wpnt-text"
+              className="absolute whitespace-nowrap text-[15px] text-wpnt-text"
               style={{
                 top: 16,
                 left: 0,
