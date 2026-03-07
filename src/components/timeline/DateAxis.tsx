@@ -67,7 +67,7 @@ function generateTicks(
       d = d.add(1, 'week');
     }
   } else if (spanDays < 365) {
-    // Monthly ticks
+    // Monthly ticks with mid-month minor tick
     let d = dayjs(visibleTimeStart).startOf('month');
     const end = dayjs(visibleTimeEnd).add(1, 'month');
     while (d.isBefore(end)) {
@@ -76,6 +76,12 @@ function generateTicks(
         const label =
           d.month() === 0 ? d.format("MMM 'YY") : d.format('MMM');
         ticks.push({ x, label, isMinor: false });
+      }
+      // Mid-month minor tick on the 15th
+      const mid = d.date(15);
+      const midX = toX(mid.valueOf());
+      if (midX >= -50 && midX <= containerWidth + 50) {
+        ticks.push({ x: midX, label: '', isMinor: true });
       }
       d = d.add(1, 'month');
     }

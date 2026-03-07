@@ -46,7 +46,7 @@ body {
 
 /* Non-color theme variables */
 :root {
-  --sidebar-shadow: -6px 0 20px -4px rgba(0,0,0,0.15);
+  --sidebar-shadow: -8px 0 28px -4px rgba(0,0,0,0.22);
   --year-line-color: rgba(26, 54, 93, 0.15);
 }
 
