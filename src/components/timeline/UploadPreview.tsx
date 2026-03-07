@@ -84,7 +84,7 @@ export function UploadPreview({ result, onClose, onEntryCreated }: UploadPreview
   if (result.type === 'error') {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
-        <div ref={panelRef} className="w-96 rounded-xl border border-wpnt-border bg-white shadow-2xl p-5">
+        <div ref={panelRef} className="w-96 rounded-xl border border-wpnt-border bg-wpnt-card shadow-2xl p-5">
           <div className="flex items-start gap-3">
             <AlertCircle size={20} className="text-status-declined shrink-0 mt-0.5" />
             <div>
@@ -201,7 +201,7 @@ export function UploadPreview({ result, onClose, onEntryCreated }: UploadPreview
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
       <div
         ref={panelRef}
-        className="w-[420px] rounded-xl border border-wpnt-border bg-white shadow-2xl"
+        className="w-[420px] rounded-xl border border-wpnt-border bg-wpnt-card shadow-2xl"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-wpnt-border px-5 py-3">

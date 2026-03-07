@@ -137,7 +137,7 @@ export function RightSidebar() {
       {/* Toggle button — always visible on the edge */}
       <button
         onClick={toggleRightSidebar}
-        className="absolute top-4 z-30 flex h-20 w-10 items-center justify-center rounded-l-md border border-r-0 border-wpnt-border bg-gradient-to-r from-gray-50 to-white shadow-md text-wpnt-text hover:from-gray-100 hover:to-gray-50 hover:shadow-lg active:from-gray-200 active:to-gray-100 transition-all"
+        className="absolute top-4 z-30 flex h-20 w-10 items-center justify-center rounded-l-md border border-r-0 border-wpnt-border bg-wpnt-card shadow-md text-wpnt-text hover:bg-wpnt-surface hover:shadow-lg active:bg-wpnt-surface transition-all"
         style={{ right: rightSidebarCollapsed ? 0 : 320 }}
       >
         <div className="rounded-sm border border-wpnt-border/40 p-0.5">
@@ -147,10 +147,10 @@ export function RightSidebar() {
 
       {/* Sidebar panel */}
       <aside
-        className={`flex flex-col bg-white overflow-y-auto overflow-x-hidden transition-all duration-200 shrink-0 ${
+        className={`flex flex-col bg-wpnt-card overflow-y-auto overflow-x-hidden transition-all duration-200 shrink-0 ${
           rightSidebarCollapsed ? 'w-0' : 'w-80'
         }`}
-        style={{ boxShadow: '-6px 0 20px -4px rgba(0,0,0,0.15)' }}
+        style={{ boxShadow: 'var(--sidebar-shadow)' }}
       >
         <div className="w-80 min-w-[320px]">
           {/* Title */}
@@ -170,7 +170,7 @@ export function RightSidebar() {
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="h-8 w-full rounded-md border border-wpnt-border bg-white pl-9 pr-8 text-sm outline-none focus:border-wpnt-blue focus:ring-1 focus:ring-wpnt-blue/30"
+                className="h-8 w-full rounded-md border border-wpnt-border bg-wpnt-input pl-9 pr-8 text-sm outline-none focus:border-wpnt-blue focus:ring-1 focus:ring-wpnt-blue/30"
               />
               {searchQuery && (
                 <button
@@ -196,7 +196,7 @@ export function RightSidebar() {
                   className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-xs font-medium transition-all ${
                     outreachTypes.includes(value)
                       ? 'border-transparent bg-wpnt-blue text-white shadow-sm'
-                      : 'border-wpnt-border bg-white text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30'
+                      : 'border-wpnt-border bg-wpnt-card text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30'
                   }`}
                 >
                   <span className={`h-2 w-2 rounded-full ${color}`} />
@@ -219,7 +219,7 @@ export function RightSidebar() {
                   className={`flex items-center gap-1.5 rounded-md border px-2.5 py-2 text-xs font-medium whitespace-nowrap transition-all ${
                     statuses.includes(value)
                       ? 'border-transparent bg-wpnt-blue text-white shadow-sm'
-                      : 'border-wpnt-border bg-white text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30'
+                      : 'border-wpnt-border bg-wpnt-card text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30'
                   }`}
                 >
                   <span className={`h-2 w-2 rounded-full ${color}`} />
@@ -272,7 +272,7 @@ export function RightSidebar() {
                     const range = preset.getRange();
                     setTimelineZoom(range.start, range.end);
                   }}
-                  className="rounded-md border border-wpnt-border bg-white px-2 py-1.5 text-[10px] font-medium text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30 transition-all"
+                  className="rounded-md border border-wpnt-border bg-wpnt-card px-2 py-1.5 text-[10px] font-medium text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30 transition-all"
                 >
                   {preset.label}
                 </button>
@@ -286,14 +286,14 @@ export function RightSidebar() {
                 type="date"
                 value={dateRange.start ?? ''}
                 onChange={(e) => setDateRange(e.target.value || null, dateRange.end)}
-                className="h-7 flex-1 min-w-0 rounded-md border border-wpnt-border bg-white px-2 text-[10px] outline-none focus:border-wpnt-blue"
+                className="h-7 flex-1 min-w-0 rounded-md border border-wpnt-border bg-wpnt-input px-2 text-[10px] outline-none focus:border-wpnt-blue"
               />
               <span className="text-[10px] text-wpnt-text shrink-0">&rarr;</span>
               <input
                 type="date"
                 value={dateRange.end ?? ''}
                 onChange={(e) => setDateRange(dateRange.start, e.target.value || null)}
-                className="h-7 flex-1 min-w-0 rounded-md border border-wpnt-border bg-white px-2 text-[10px] outline-none focus:border-wpnt-blue"
+                className="h-7 flex-1 min-w-0 rounded-md border border-wpnt-border bg-wpnt-input px-2 text-[10px] outline-none focus:border-wpnt-blue"
               />
             </div>
           </div>
@@ -326,7 +326,7 @@ export function RightSidebar() {
             <div className="px-4 py-6">
               <button
                 onClick={resetFilters}
-                className="flex w-full items-center justify-center gap-1 rounded-md border border-wpnt-border bg-white px-2 py-1.5 text-xs text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30 transition-all"
+                className="flex w-full items-center justify-center gap-1 rounded-md border border-wpnt-border bg-wpnt-card px-2 py-1.5 text-xs text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30 transition-all"
               >
                 <RotateCcw size={12} />
                 Reset Filters

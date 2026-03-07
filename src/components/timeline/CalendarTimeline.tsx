@@ -309,14 +309,14 @@ export function CalendarTimelineView() {
                 top: 0,
                 bottom: 0,
                 width: 0,
-                borderLeft: '1px dotted rgba(31, 78, 120, 0.15)',
+                borderLeft: '1px dotted var(--year-line-color)',
               }}
             />
           </div>
         ))}
 
         {/* Floating zoom controls — bottom-right */}
-        <div className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 rounded-lg border border-wpnt-border bg-white/90 px-2 py-1.5 shadow-sm backdrop-blur-sm">
+        <div className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 rounded-lg border border-wpnt-border bg-wpnt-card/90 px-2 py-1.5 shadow-sm backdrop-blur-sm">
           <button
             onClick={() => zoom(0.5)}
             className="rounded-md p-1 text-wpnt-text hover:bg-wpnt-surface transition-colors"
@@ -397,7 +397,7 @@ export function CalendarTimelineView() {
                   +{col.overflowCount} more
                 </button>
                 {openOverflow === col.id && (
-                  <div className="absolute bottom-full mb-1 left-0 w-56 rounded-lg border border-wpnt-border bg-white shadow-xl p-2 space-y-1 z-50">
+                  <div className="absolute bottom-full mb-1 left-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-xl p-2 space-y-1 z-50">
                     {col.cards
                       .filter((c) => c.isOverflow)
                       .map((c) => (
@@ -487,7 +487,7 @@ export function CalendarTimelineView() {
                   +{col.overflowCount} more
                 </button>
                 {openOverflow === col.id && (
-                  <div className="absolute top-full mt-1 left-0 w-56 rounded-lg border border-wpnt-border bg-white shadow-xl p-2 space-y-1 z-50">
+                  <div className="absolute top-full mt-1 left-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-xl p-2 space-y-1 z-50">
                     {col.cards
                       .filter((c) => c.isOverflow)
                       .map((c) => (

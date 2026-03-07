@@ -129,7 +129,7 @@ export function OutreachDetail() {
 
       {/* Panel */}
       <div
-        className="fixed right-0 top-0 z-50 flex h-full w-[480px] flex-col border-l border-wpnt-border bg-[#FAFBFD] shadow-2xl transition-transform duration-200 ease-out"
+        className="fixed right-0 top-0 z-50 flex h-full w-[480px] flex-col border-l border-wpnt-border bg-wpnt-detail-bg shadow-2xl transition-transform duration-200 ease-out"
         style={{ transform: isVisible ? 'translateX(0)' : 'translateX(100%)' }}
       >
         {/* Header */}

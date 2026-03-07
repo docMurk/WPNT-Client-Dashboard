@@ -58,7 +58,7 @@ export function ChipSelector({
         className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-all ${
           selectedIds.length > 0
             ? 'border-wpnt-blue bg-wpnt-blue/5 text-wpnt-blue shadow-sm'
-            : 'border-wpnt-border bg-white text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30'
+            : 'border-wpnt-border bg-wpnt-card text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30'
         }`}
       >
         {label}
@@ -72,7 +72,7 @@ export function ChipSelector({
 
       {/* Dropdown */}
       {isOpen && (
-        <div className={`absolute z-50 w-64 rounded-lg border border-wpnt-border bg-white shadow-lg ${
+        <div className={`absolute z-50 w-64 rounded-lg border border-wpnt-border bg-wpnt-card shadow-lg ${
           openDirection === 'left' ? 'right-0 top-full mt-1' : 'top-full mt-1'
         }`}>
           {/* Search */}

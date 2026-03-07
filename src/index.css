@@ -10,6 +10,12 @@
   --color-wpnt-alt-row: #F3F5F8;
   --color-wpnt-canvas: #E4E8F0;
 
+  /* Surface tokens */
+  --color-wpnt-card: #ffffff;
+  --color-wpnt-page: #ffffff;
+  --color-wpnt-input: #ffffff;
+  --color-wpnt-detail-bg: #FAFBFD;
+
   /* Outreach Type Accents */
   --color-proposal: #4472C4;
   --color-follow-up: #70AD47;
@@ -30,12 +36,99 @@
   --radius-xl: 0.75rem;
 }
 
-
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   color: var(--color-wpnt-body);
-  background: #ffffff;
+  background: var(--color-wpnt-page);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Non-color theme variables */
+:root {
+  --sidebar-shadow: -6px 0 20px -4px rgba(0,0,0,0.15);
+  --year-line-color: rgba(31, 78, 120, 0.15);
+}
+
+/* ── Dark / High Contrast Theme ───────────────────────── */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-wpnt-blue: #3B82F6;
+  --color-wpnt-text: #94A3B8;
+  --color-wpnt-body: #E2E8F0;
+  --color-wpnt-surface: #1E293B;
+  --color-wpnt-border: #334155;
+  --color-wpnt-alt-row: #1E293B;
+  --color-wpnt-canvas: #0F172A;
+
+  --color-wpnt-card: #1E293B;
+  --color-wpnt-page: #0F172A;
+  --color-wpnt-input: #334155;
+  --color-wpnt-detail-bg: #1E293B;
+
+  --color-proposal: #5B8DEF;
+  --color-follow-up: #86C255;
+  --color-status-open: #5B8DEF;
+  --color-status-accepted: #86C255;
+  --color-status-declined: #FF6B6B;
+  --color-status-no-response: #B0B0B0;
+  --color-status-other: #FFBF4A;
+
+  --color-sidebar-active: #1E3A5F;
+
+  --sidebar-shadow: -6px 0 20px -4px rgba(0,0,0,0.5);
+  --year-line-color: rgba(59, 130, 246, 0.2);
+}
+
+/* ── Modern Minimal Theme ─────────────────────────────── */
+[data-theme="minimal"] {
+  --color-wpnt-blue: #2563EB;
+  --color-wpnt-text: #64748B;
+  --color-wpnt-body: #1E293B;
+  --color-wpnt-surface: #F1F5F9;
+  --color-wpnt-border: #E2E8F0;
+  --color-wpnt-alt-row: #F8FAFC;
+  --color-wpnt-canvas: #EFF4F8;
+
+  --color-wpnt-card: #FFFFFF;
+  --color-wpnt-page: #FAFBFC;
+  --color-wpnt-input: #FFFFFF;
+  --color-wpnt-detail-bg: #F8FAFC;
+
+  --color-proposal: #3B82F6;
+  --color-follow-up: #22C55E;
+  --color-status-open: #3B82F6;
+  --color-status-accepted: #22C55E;
+  --color-status-declined: #EF4444;
+  --color-status-no-response: #94A3B8;
+  --color-status-other: #F59E0B;
+
+  --color-sidebar-active: #EFF6FF;
+}
+
+/* ── Corporate Premium Theme ──────────────────────────── */
+[data-theme="corporate"] {
+  --color-wpnt-blue: #1A365D;
+  --color-wpnt-text: #4A5568;
+  --color-wpnt-body: #1A202C;
+  --color-wpnt-surface: #EDF2F7;
+  --color-wpnt-border: #CBD5E0;
+  --color-wpnt-alt-row: #EDF2F7;
+  --color-wpnt-canvas: #DDE4EC;
+
+  --color-wpnt-card: #FFFFFF;
+  --color-wpnt-page: #F7FAFC;
+  --color-wpnt-input: #FFFFFF;
+  --color-wpnt-detail-bg: #F0F4F8;
+
+  --color-proposal: #3D6098;
+  --color-follow-up: #5A9A3A;
+  --color-status-open: #3D6098;
+  --color-status-accepted: #5A9A3A;
+  --color-status-declined: #C53030;
+  --color-status-no-response: #8C8C8C;
+  --color-status-other: #D69E2E;
+
+  --color-sidebar-active: #E2E8F0;
+}

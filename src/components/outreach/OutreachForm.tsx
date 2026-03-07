@@ -232,7 +232,7 @@ export function OutreachForm() {
       <div className="fixed inset-0 z-40 bg-black/20" onClick={closeForm} />
 
       {/* Modal */}
-      <div className="fixed inset-y-0 right-0 z-50 flex w-[520px] flex-col bg-white shadow-xl">
+      <div className="fixed inset-y-0 right-0 z-50 flex w-[520px] flex-col bg-wpnt-card shadow-xl">
         {/* Header */}
         <div className="flex items-center justify-between border-b border-wpnt-border px-5 py-4">
           <h2 className="text-base font-semibold text-wpnt-body">
