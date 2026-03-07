@@ -344,7 +344,7 @@ export function CalendarTimelineView() {
 
         {/* Proposals section */}
         <div className="relative" style={{ height: proposalHeight }}>
-          <span className="absolute top-2 left-1/2 -translate-x-1/2 text-xs font-medium text-wpnt-text/60 z-10">
+          <span className="absolute top-2 left-1/2 -translate-x-1/2 text-[10px] font-semibold uppercase tracking-wider text-wpnt-text/60 z-10">
             Proposals
           </span>
 
@@ -397,7 +397,7 @@ export function CalendarTimelineView() {
                   +{col.overflowCount} more
                 </button>
                 {openOverflow === col.id && (
-                  <div className="absolute bottom-full mb-1 left-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-md p-2 space-y-1 z-50">
+                  <div className="absolute bottom-full mb-1 left-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-xl p-2 space-y-1 z-50">
                     {col.cards
                       .filter((c) => c.isOverflow)
                       .map((c) => (
@@ -487,7 +487,7 @@ export function CalendarTimelineView() {
                   +{col.overflowCount} more
                 </button>
                 {openOverflow === col.id && (
-                  <div className="absolute top-full mt-1 left-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-md p-2 space-y-1 z-50">
+                  <div className="absolute top-full mt-1 left-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-xl p-2 space-y-1 z-50">
                     {col.cards
                       .filter((c) => c.isOverflow)
                       .map((c) => (
@@ -516,7 +516,7 @@ export function CalendarTimelineView() {
               </div>
             ))}
 
-          <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-xs font-medium text-wpnt-text/60 z-10">
+          <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[10px] font-semibold uppercase tracking-wider text-wpnt-text/60 z-10">
             Post-Program Outreach
           </span>
         </div>

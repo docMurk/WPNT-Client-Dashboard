@@ -185,7 +185,7 @@ export function RightSidebar() {
 
           {/* Type */}
           <div className="px-4 py-6 border-b border-wpnt-border">
-            <span className="text-xs font-medium text-wpnt-text mb-3.5 block">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text mb-3.5 block">
               Type
             </span>
             <div className="flex flex-col gap-1.5">
@@ -208,7 +208,7 @@ export function RightSidebar() {
 
           {/* Status */}
           <div className="px-4 py-6 border-b border-wpnt-border">
-            <span className="text-xs font-medium text-wpnt-text mb-3.5 block">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text mb-3.5 block">
               Status
             </span>
             <div className="flex flex-col gap-1.5">
@@ -231,7 +231,7 @@ export function RightSidebar() {
 
           {/* Client */}
           <div className="px-4 py-6 border-b border-wpnt-border">
-            <span className="text-xs font-medium text-wpnt-text mb-3.5 block">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text mb-3.5 block">
               Client
             </span>
             <ChipSelector
@@ -246,7 +246,7 @@ export function RightSidebar() {
 
           {/* Program */}
           <div className="px-4 py-6 border-b border-wpnt-border">
-            <span className="text-xs font-medium text-wpnt-text mb-3.5 block">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text mb-3.5 block">
               Program
             </span>
             <ChipSelector
@@ -261,7 +261,7 @@ export function RightSidebar() {
 
           {/* Timeline View */}
           <div className="px-4 py-6 border-b border-wpnt-border">
-            <span className="text-xs font-medium text-wpnt-text mb-2 block">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text mb-2 block">
               View
             </span>
             <div className="grid grid-cols-3 gap-1.5 mb-3">
@@ -278,7 +278,7 @@ export function RightSidebar() {
                 </button>
               ))}
             </div>
-            <span className="text-xs font-medium text-wpnt-text mb-2 block">
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text mb-2 block">
               Date Filter
             </span>
             <div className="flex items-center gap-2">
@@ -301,7 +301,7 @@ export function RightSidebar() {
           {/* Quarter info */}
           <div className="px-4 py-6 border-b border-wpnt-border">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-wpnt-text">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-wpnt-text">
                 Q{currentQuarter} Proposed
               </span>
               <span className="text-sm font-bold text-wpnt-blue">

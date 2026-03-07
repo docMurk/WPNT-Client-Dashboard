@@ -258,7 +258,7 @@ export function EntryCard({
       {/* Date tooltip during drag */}
       {isDragging && dragTargetDate && (
         <div
-          className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-wpnt-blue px-2 py-0.5 text-[10px] font-semibold text-white"
+          className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-wpnt-blue px-2 py-0.5 text-[10px] font-semibold text-white shadow-md"
           style={section === 'proposal' ? { top: '100%', marginTop: 4 } : { bottom: '100%', marginBottom: 4 }}
         >
           {dayjs(dragTargetDate).format('MMM D, YYYY')}

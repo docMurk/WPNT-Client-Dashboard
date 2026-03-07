@@ -76,7 +76,7 @@ export function CardDetailPanel({
       {/* Panel */}
       <div
         ref={panelRef}
-        className="absolute z-30 rounded-xl border border-wpnt-border bg-wpnt-card shadow-md"
+        className="absolute z-30 rounded-xl border border-wpnt-border bg-wpnt-card shadow-xl"
         style={{
           width: PANEL_WIDTH,
           left,
