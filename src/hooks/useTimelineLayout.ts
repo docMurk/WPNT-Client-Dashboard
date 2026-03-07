@@ -63,22 +63,45 @@ function layoutCards(
     (item) => item.x > -CARD_WIDTH && item.x < containerWidth + CARD_WIDTH,
   );
 
-  // Group overlapping cards into clusters
-  // Two cards overlap if the new card is within CARD_WIDTH + CARD_GAP of the
-  // LAST card in the group (chain comparison prevents gaps between groups)
-  const groups: { items: { entry: OutreachEntry; x: number }[] }[] = [];
+  // STEP 1: Lane-based positioning
+  // Each lane tracks the rightmost card's x-center. A card fits in a lane if
+  // its x is at least CARD_WIDTH + CARD_GAP past the lane's rightmost card.
+  // This guarantees no two cards in the same lane overlap horizontally.
+  const laneRightmost: number[] = [];
+
+  const cardResults: { entry: OutreachEntry; x: number; lane: number; isOverflow: boolean }[] = [];
 
   for (const item of visible) {
-    const lastGroup = groups[groups.length - 1];
-    const lastItem = lastGroup?.items[lastGroup.items.length - 1];
-    if (lastItem && Math.abs(item.x - lastItem.x) < CARD_WIDTH + CARD_GAP) {
-      lastGroup.items.push(item);
+    let assignedLane = -1;
+    for (let lane = 0; lane < maxStack; lane++) {
+      if (lane >= laneRightmost.length || item.x - laneRightmost[lane] >= CARD_WIDTH + CARD_GAP) {
+        assignedLane = lane;
+        break;
+      }
+    }
+
+    if (assignedLane >= 0) {
+      if (assignedLane >= laneRightmost.length) laneRightmost.push(item.x);
+      else laneRightmost[assignedLane] = item.x;
+      cardResults.push({ entry: item.entry, x: item.x, lane: assignedLane, isOverflow: false });
     } else {
-      groups.push({ items: [item] });
+      cardResults.push({ entry: item.entry, x: item.x, lane: -1, isOverflow: true });
     }
   }
 
-  // Assign positions within groups — each card uses exact x, stack vertically
+  // STEP 2: Group into columns (anchor-based, for overflow badge positioning only)
+  const groups: { anchorX: number; items: typeof cardResults }[] = [];
+
+  for (const item of cardResults) {
+    const lastGroup = groups[groups.length - 1];
+    if (lastGroup && Math.abs(item.x - lastGroup.anchorX) < CARD_WIDTH + CARD_GAP) {
+      lastGroup.items.push(item);
+    } else {
+      groups.push({ anchorX: item.x, items: [item] });
+    }
+  }
+
+  // STEP 3: Build output
   const allCards: PositionedCard[] = [];
   const allColumns: CardColumn[] = [];
   let actualMaxStack = 0;
@@ -87,35 +110,32 @@ function layoutCards(
     const group = groups[gIdx];
     const columnId = `${section}-${gIdx}`;
     const columnCards: PositionedCard[] = [];
-    // Use first card's x as the column anchor for overflow badge positioning
     const columnX = group.items[0].x - CARD_WIDTH / 2;
 
-    for (let i = 0; i < group.items.length; i++) {
-      const isOverflow = i >= maxStack;
-      const stackIndex = isOverflow ? -1 : i;
-
-      // y: proposals stack upward (negative y from axis), follow-ups stack downward
-      const y =
-        section === 'proposal'
-          ? -(stackIndex + 1) * STACK_OFFSET
-          : stackIndex * STACK_OFFSET;
+    for (const item of group.items) {
+      const y = item.isOverflow
+        ? 0
+        : section === 'proposal'
+          ? -(item.lane + 1) * STACK_OFFSET
+          : item.lane * STACK_OFFSET;
 
       const card: PositionedCard = {
-        entry: group.items[i].entry,
-        x: group.items[i].x - CARD_WIDTH / 2, // Center card on its exact date position
-        y: isOverflow ? 0 : y,
-        stackIndex,
-        isOverflow,
+        entry: item.entry,
+        x: item.x - CARD_WIDTH / 2,
+        y,
+        stackIndex: item.isOverflow ? -1 : item.lane,
+        isOverflow: item.isOverflow,
         columnId,
       };
 
       columnCards.push(card);
-      if (!isOverflow) allCards.push(card);
+      if (!item.isOverflow) {
+        allCards.push(card);
+        if (item.lane + 1 > actualMaxStack) actualMaxStack = item.lane + 1;
+      }
     }
 
-    const overflowCount = Math.max(0, group.items.length - maxStack);
-    const visibleCount = Math.min(group.items.length, maxStack);
-    if (visibleCount > actualMaxStack) actualMaxStack = visibleCount;
+    const overflowCount = group.items.filter((i) => i.isOverflow).length;
 
     allColumns.push({
       id: columnId,
