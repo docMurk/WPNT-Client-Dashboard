@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type ThemeId = 'default' | 'dark' | 'minimal' | 'corporate';
+export type ThemeId = 'default' | 'dark' | 'minimal' | 'original';
 
 const STORAGE_KEY = 'wpnt-theme';
 
@@ -17,8 +17,17 @@ function applyTheme(theme: ThemeId) {
   }
 }
 
+function migrateTheme(): ThemeId {
+  const stored = localStorage.getItem(STORAGE_KEY);
+  if (stored === 'corporate') {
+    localStorage.setItem(STORAGE_KEY, 'default');
+    return 'default';
+  }
+  return (stored as ThemeId) || 'default';
+}
+
 export const useThemeStore = create<ThemeState>((set) => ({
-  theme: (localStorage.getItem(STORAGE_KEY) as ThemeId) || 'default',
+  theme: migrateTheme(),
   setTheme: (theme) => {
     localStorage.setItem(STORAGE_KEY, theme);
     applyTheme(theme);

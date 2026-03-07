@@ -11,10 +11,10 @@ const navItems = [
 ];
 
 const THEMES: { id: ThemeId; label: string; swatch: string }[] = [
-  { id: 'default', label: 'Default', swatch: '#1F4E78' },
+  { id: 'default', label: 'Corporate', swatch: '#1A365D' },
   { id: 'dark', label: 'Dark', swatch: '#0F172A' },
   { id: 'minimal', label: 'Minimal', swatch: '#2563EB' },
-  { id: 'corporate', label: 'Corporate', swatch: '#1A365D' },
+  { id: 'original', label: 'Original', swatch: '#1F4E78' },
 ];
 
 export function Sidebar() {
@@ -51,10 +51,10 @@ export function Sidebar() {
             key={to}
             to={to}
             className={({ isActive }) =>
-              `flex items-center justify-center rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
+              `flex items-center justify-center border-l-2 px-4 py-2.5 text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-sidebar-active text-wpnt-blue'
-                  : 'text-wpnt-text hover:bg-wpnt-surface'
+                  ? 'border-wpnt-blue text-wpnt-blue'
+                  : 'border-transparent text-wpnt-text hover:bg-wpnt-surface'
               }`
             }
             title={label}

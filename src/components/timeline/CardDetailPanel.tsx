@@ -134,14 +134,14 @@ export function CardDetailPanel({
           <div className="flex items-center gap-2">
             <button
               onClick={onEdit}
-              className="flex items-center gap-1.5 rounded-md border border-wpnt-border bg-wpnt-card shadow-sm px-3.5 py-2 text-xs text-wpnt-text hover:shadow hover:border-wpnt-blue/30 transition-all"
+              className="flex items-center gap-1.5 rounded-md border border-wpnt-border bg-wpnt-card px-3.5 py-2 text-xs text-wpnt-text hover:border-wpnt-blue/30 transition-all"
             >
               <Pencil size={12} />
               Edit
             </button>
             <button
               onClick={onViewFull}
-              className="flex items-center gap-1.5 rounded-md border border-wpnt-border bg-wpnt-card shadow-sm px-3.5 py-2 text-xs text-wpnt-text hover:shadow hover:border-wpnt-blue/30 transition-all"
+              className="flex items-center gap-1.5 rounded-md border border-wpnt-border bg-wpnt-card px-3.5 py-2 text-xs text-wpnt-text hover:border-wpnt-blue/30 transition-all"
             >
               <Eye size={12} />
               View Full Detail

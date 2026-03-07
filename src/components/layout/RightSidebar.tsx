@@ -137,7 +137,7 @@ export function RightSidebar() {
       {/* Toggle button — always visible on the edge */}
       <button
         onClick={toggleRightSidebar}
-        className="absolute top-4 z-30 flex h-20 w-10 items-center justify-center rounded-l-md border border-r-0 border-wpnt-border bg-wpnt-card shadow-md text-wpnt-text hover:bg-wpnt-surface hover:shadow-lg active:bg-wpnt-surface transition-all"
+        className="absolute top-4 z-30 flex h-20 w-10 items-center justify-center rounded-l-md border border-r-0 border-wpnt-border bg-wpnt-card text-wpnt-text hover:bg-wpnt-surface hover:shadow-sm active:bg-wpnt-surface transition-all"
         style={{ right: rightSidebarCollapsed ? 0 : 320 }}
       >
         <div className="rounded-sm border border-wpnt-border/40 p-0.5">
@@ -195,8 +195,8 @@ export function RightSidebar() {
                   onClick={() => toggleOutreachType(value)}
                   className={`flex items-center gap-2 rounded-md border px-3 py-1.5 text-xs font-medium transition-all ${
                     outreachTypes.includes(value)
-                      ? 'border-transparent bg-wpnt-blue text-white shadow-sm'
-                      : 'border-wpnt-border bg-wpnt-card text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30'
+                      ? 'border-transparent bg-wpnt-blue text-white'
+                      : 'border-wpnt-border bg-wpnt-card text-wpnt-text hover:border-wpnt-blue/30'
                   }`}
                 >
                   <span className={`h-2 w-2 rounded-full ${color}`} />
@@ -218,8 +218,8 @@ export function RightSidebar() {
                   onClick={() => toggleStatus(value)}
                   className={`flex items-center gap-1.5 rounded-md border px-2.5 py-2 text-xs font-medium whitespace-nowrap transition-all ${
                     statuses.includes(value)
-                      ? 'border-transparent bg-wpnt-blue text-white shadow-sm'
-                      : 'border-wpnt-border bg-wpnt-card text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30'
+                      ? 'border-transparent bg-wpnt-blue text-white'
+                      : 'border-wpnt-border bg-wpnt-card text-wpnt-text hover:border-wpnt-blue/30'
                   }`}
                 >
                   <span className={`h-2 w-2 rounded-full ${color}`} />
@@ -272,7 +272,7 @@ export function RightSidebar() {
                     const range = preset.getRange();
                     setTimelineZoom(range.start, range.end);
                   }}
-                  className="rounded-md border border-wpnt-border bg-wpnt-card px-2 py-1.5 text-[10px] font-medium text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30 transition-all"
+                  className="rounded-md border border-wpnt-border bg-wpnt-card px-2 py-1.5 text-[10px] font-medium text-wpnt-text hover:border-wpnt-blue/30 transition-all"
                 >
                   {preset.label}
                 </button>
@@ -326,7 +326,7 @@ export function RightSidebar() {
             <div className="px-4 py-6">
               <button
                 onClick={resetFilters}
-                className="flex w-full items-center justify-center gap-1 rounded-md border border-wpnt-border bg-wpnt-card px-2 py-1.5 text-xs text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30 transition-all"
+                className="flex w-full items-center justify-center gap-1 rounded-md border border-wpnt-border bg-wpnt-card px-2 py-1.5 text-xs text-wpnt-text hover:border-wpnt-blue/30 transition-all"
               >
                 <RotateCcw size={12} />
                 Reset Filters

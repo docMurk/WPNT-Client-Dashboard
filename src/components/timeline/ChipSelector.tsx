@@ -57,8 +57,8 @@ export function ChipSelector({
         onClick={() => setIsOpen(!isOpen)}
         className={`flex items-center gap-1.5 rounded-md border px-2.5 py-1 text-xs font-medium transition-all ${
           selectedIds.length > 0
-            ? 'border-wpnt-blue bg-wpnt-blue/5 text-wpnt-blue shadow-sm'
-            : 'border-wpnt-border bg-wpnt-card text-wpnt-text shadow-sm hover:shadow hover:border-wpnt-blue/30'
+            ? 'border-wpnt-blue bg-wpnt-blue/5 text-wpnt-blue'
+            : 'border-wpnt-border bg-wpnt-card text-wpnt-text hover:border-wpnt-blue/30'
         }`}
       >
         {label}

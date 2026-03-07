@@ -316,7 +316,7 @@ export function CalendarTimelineView() {
         ))}
 
         {/* Floating zoom controls — bottom-right */}
-        <div className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 rounded-lg border border-wpnt-border bg-wpnt-card/90 px-2 py-1.5 shadow-sm backdrop-blur-sm">
+        <div className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5 rounded-lg border border-wpnt-border bg-wpnt-card/90 px-2 py-1.5 backdrop-blur-sm">
           <button
             onClick={() => zoom(0.5)}
             className="rounded-md p-1 text-wpnt-text hover:bg-wpnt-surface transition-colors"

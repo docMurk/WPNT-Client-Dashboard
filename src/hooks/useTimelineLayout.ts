@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import type { OutreachEntry } from '@/types/outreach';
 
 export const CARD_WIDTH = 120;
-export const CARD_HEIGHT = 130;
+export const CARD_HEIGHT = 122;
 export const CARD_GAP = 8;
 export const STACK_OFFSET = CARD_HEIGHT + CARD_GAP;
 export const MAX_PROPOSAL_STACK = 3;

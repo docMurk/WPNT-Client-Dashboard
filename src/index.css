@@ -1,39 +1,39 @@
 @import "tailwindcss";
 
 @theme {
-  /* WPNT Brand Colors */
-  --color-wpnt-blue: #1F4E78;
-  --color-wpnt-text: #595959;
-  --color-wpnt-body: #1A1A1A;
-  --color-wpnt-surface: #F8F9FB;
-  --color-wpnt-border: #D5D9E2;
-  --color-wpnt-alt-row: #F3F5F8;
-  --color-wpnt-canvas: #E4E8F0;
+  /* WPNT Brand Colors — Corporate base */
+  --color-wpnt-blue: #1A365D;
+  --color-wpnt-text: #4A5568;
+  --color-wpnt-body: #1A202C;
+  --color-wpnt-surface: #EDF2F7;
+  --color-wpnt-border: #CBD5E0;
+  --color-wpnt-alt-row: #EDF2F7;
+  --color-wpnt-canvas: #DDE4EC;
 
   /* Surface tokens */
-  --color-wpnt-card: #ffffff;
-  --color-wpnt-page: #ffffff;
-  --color-wpnt-input: #ffffff;
-  --color-wpnt-detail-bg: #FAFBFD;
+  --color-wpnt-card: #FFFFFF;
+  --color-wpnt-page: #F7FAFC;
+  --color-wpnt-input: #FFFFFF;
+  --color-wpnt-detail-bg: #F0F4F8;
 
   /* Outreach Type Accents */
-  --color-proposal: #4472C4;
-  --color-follow-up: #70AD47;
+  --color-proposal: #3D6098;
+  --color-follow-up: #5A9A3A;
   /* Status Colors */
-  --color-status-open: #4472C4;
-  --color-status-accepted: #70AD47;
-  --color-status-declined: #E74C3C;
-  --color-status-no-response: #9E9E9E;
-  --color-status-other: #F5A623;
+  --color-status-open: #3D6098;
+  --color-status-accepted: #5A9A3A;
+  --color-status-declined: #C53030;
+  --color-status-no-response: #8C8C8C;
+  --color-status-other: #D69E2E;
 
   /* Sidebar */
-  --color-sidebar-active: #E8EDF5;
+  --color-sidebar-active: #E2E8F0;
 
-  /* Radii */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
+  /* Radii — sharp/corporate */
+  --radius-sm: 0.125rem;
+  --radius-md: 0.125rem;
+  --radius-lg: 0.1875rem;
+  --radius-xl: 0.25rem;
 }
 
 body {
@@ -47,7 +47,7 @@ body {
 /* Non-color theme variables */
 :root {
   --sidebar-shadow: -6px 0 20px -4px rgba(0,0,0,0.15);
-  --year-line-color: rgba(31, 78, 120, 0.15);
+  --year-line-color: rgba(26, 54, 93, 0.15);
 }
 
 /* ── Dark / High Contrast Theme ───────────────────────── */
@@ -107,28 +107,36 @@ body {
   --color-sidebar-active: #EFF6FF;
 }
 
-/* ── Corporate Premium Theme ──────────────────────────── */
-[data-theme="corporate"] {
-  --color-wpnt-blue: #1A365D;
-  --color-wpnt-text: #4A5568;
-  --color-wpnt-body: #1A202C;
-  --color-wpnt-surface: #EDF2F7;
-  --color-wpnt-border: #CBD5E0;
-  --color-wpnt-alt-row: #EDF2F7;
-  --color-wpnt-canvas: #DDE4EC;
+/* ── Original Theme (legacy default) ─────────────────── */
+[data-theme="original"] {
+  --color-wpnt-blue: #1F4E78;
+  --color-wpnt-text: #595959;
+  --color-wpnt-body: #1A1A1A;
+  --color-wpnt-surface: #F8F9FB;
+  --color-wpnt-border: #D5D9E2;
+  --color-wpnt-alt-row: #F3F5F8;
+  --color-wpnt-canvas: #E4E8F0;
 
-  --color-wpnt-card: #FFFFFF;
-  --color-wpnt-page: #F7FAFC;
-  --color-wpnt-input: #FFFFFF;
-  --color-wpnt-detail-bg: #F0F4F8;
+  --color-wpnt-card: #ffffff;
+  --color-wpnt-page: #ffffff;
+  --color-wpnt-input: #ffffff;
+  --color-wpnt-detail-bg: #FAFBFD;
 
-  --color-proposal: #3D6098;
-  --color-follow-up: #5A9A3A;
-  --color-status-open: #3D6098;
-  --color-status-accepted: #5A9A3A;
-  --color-status-declined: #C53030;
-  --color-status-no-response: #8C8C8C;
-  --color-status-other: #D69E2E;
+  --color-proposal: #4472C4;
+  --color-follow-up: #70AD47;
+  --color-status-open: #4472C4;
+  --color-status-accepted: #70AD47;
+  --color-status-declined: #E74C3C;
+  --color-status-no-response: #9E9E9E;
+  --color-status-other: #F5A623;
 
-  --color-sidebar-active: #E2E8F0;
+  --color-sidebar-active: #E8EDF5;
+
+  /* Soft radii — restore original look */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+
+  --year-line-color: rgba(31, 78, 120, 0.15);
 }
