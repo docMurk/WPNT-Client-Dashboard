@@ -30,10 +30,10 @@
   --color-sidebar-active: #E2E8F0;
 
   /* Radii — sharp/corporate */
-  --radius-sm: 0.0625rem;
-  --radius-md: 0.0625rem;
-  --radius-lg: 0.125rem;
-  --radius-xl: 0.125rem;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.125rem;
+  --radius-lg: 0.1875rem;
+  --radius-xl: 0.25rem;
 }
 
 body {
