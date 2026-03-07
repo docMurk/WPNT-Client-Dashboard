@@ -72,7 +72,7 @@ export function ChipSelector({
 
       {/* Dropdown */}
       {isOpen && (
-        <div className={`absolute z-50 w-64 rounded-lg border border-wpnt-border bg-wpnt-card shadow-lg ${
+        <div className={`absolute z-50 w-64 rounded-lg border border-wpnt-border bg-wpnt-card shadow-md ${
           openDirection === 'left' ? 'right-0 top-full mt-1' : 'top-full mt-1'
         }`}>
           {/* Search */}

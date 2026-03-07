@@ -75,7 +75,7 @@ export function Sidebar() {
         </button>
 
         {showThemes && (
-          <div className="absolute bottom-full left-full ml-1 mb-0 w-36 rounded-lg border border-wpnt-border bg-wpnt-card shadow-lg p-2 space-y-1 z-50">
+          <div className="absolute bottom-full left-full ml-1 mb-0 w-36 rounded-lg border border-wpnt-border bg-wpnt-card shadow-md p-2 space-y-1 z-50">
             {THEMES.map((t) => (
               <button
                 key={t.id}
