@@ -104,26 +104,26 @@ export function CardDetailPanel({
           )}
 
           {/* Date */}
-          <div className="text-xs text-wpnt-text">
+          <div className="text-sm text-wpnt-text">
             {formatDate(entry.dateSent)}
           </div>
 
           {/* CRM Owner */}
           {entry.crmOwner && (
-            <div className="text-xs text-wpnt-text">
+            <div className="text-sm text-wpnt-text">
               CRM: <span className="font-medium text-wpnt-body">{entry.crmOwner}</span>
             </div>
           )}
 
           {/* Description */}
           {entry.programDescription && (
-            <p className="text-xs text-wpnt-body line-clamp-4">
+            <p className="text-sm text-wpnt-body line-clamp-4">
               {entry.programDescription}
             </p>
           )}
 
           {/* SharePoint placeholder */}
-          <div className="text-xs text-wpnt-blue">
+          <div className="text-sm text-wpnt-blue">
             [SharePoint placeholder link]
           </div>
 
@@ -134,16 +134,16 @@ export function CardDetailPanel({
           <div className="flex items-center gap-2">
             <button
               onClick={onEdit}
-              className="flex items-center gap-1.5 rounded-md border border-wpnt-border bg-wpnt-card px-3.5 py-2 text-xs text-wpnt-text hover:border-wpnt-blue/30 transition-all"
+              className="flex items-center gap-1.5 rounded-md border border-wpnt-border bg-wpnt-card px-3.5 py-2 text-sm text-wpnt-text hover:border-wpnt-blue/30 transition-all"
             >
-              <Pencil size={12} />
+              <Pencil size={14} />
               Edit
             </button>
             <button
               onClick={onViewFull}
-              className="flex items-center gap-1.5 rounded-md border border-wpnt-border bg-wpnt-card px-3.5 py-2 text-xs text-wpnt-text hover:border-wpnt-blue/30 transition-all"
+              className="flex items-center gap-1.5 rounded-md border border-wpnt-border bg-wpnt-card px-3.5 py-2 text-sm text-wpnt-text hover:border-wpnt-blue/30 transition-all"
             >
-              <Eye size={12} />
+              <Eye size={14} />
               View Full Detail
             </button>
           </div>

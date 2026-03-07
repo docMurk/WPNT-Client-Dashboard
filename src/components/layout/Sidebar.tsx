@@ -51,7 +51,7 @@ export function Sidebar() {
             key={to}
             to={to}
             className={({ isActive }) =>
-              `flex items-center justify-center border-l-2 px-4 py-2.5 text-sm font-medium transition-colors ${
+              `flex items-center justify-center border-l-2 px-2 py-2.5 text-sm font-medium transition-colors ${
                 isActive
                   ? 'border-wpnt-blue text-wpnt-blue'
                   : 'border-transparent text-wpnt-text hover:bg-wpnt-surface'
@@ -59,7 +59,7 @@ export function Sidebar() {
             }
             title={label}
           >
-            <Icon size={18} />
+            <Icon size={36} />
           </NavLink>
         ))}
       </nav>
