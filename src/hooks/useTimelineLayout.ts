@@ -64,15 +64,17 @@ function layoutCards(
   );
 
   // Group overlapping cards into clusters
-  // Two cards overlap if |card.x - group anchor x| < CARD_WIDTH + CARD_GAP
-  const groups: { anchorX: number; items: { entry: OutreachEntry; x: number }[] }[] = [];
+  // Two cards overlap if the new card is within CARD_WIDTH + CARD_GAP of the
+  // LAST card in the group (chain comparison prevents gaps between groups)
+  const groups: { items: { entry: OutreachEntry; x: number }[] }[] = [];
 
   for (const item of visible) {
     const lastGroup = groups[groups.length - 1];
-    if (lastGroup && Math.abs(item.x - lastGroup.anchorX) < CARD_WIDTH + CARD_GAP) {
+    const lastItem = lastGroup?.items[lastGroup.items.length - 1];
+    if (lastItem && Math.abs(item.x - lastItem.x) < CARD_WIDTH + CARD_GAP) {
       lastGroup.items.push(item);
     } else {
-      groups.push({ anchorX: item.x, items: [item] });
+      groups.push({ items: [item] });
     }
   }
 
