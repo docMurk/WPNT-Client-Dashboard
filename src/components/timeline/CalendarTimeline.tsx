@@ -255,7 +255,7 @@ export function CalendarTimelineView() {
     const span = visibleTimeEnd - visibleTimeStart;
     if (containerWidth === 0 || span <= 0) return [];
 
-    const totals: { x: number; label: string }[] = [];
+    const totals: { x: number; qLabel: string; valueLabel: string }[] = [];
     const startD = dayjs(visibleTimeStart);
     const quarterMonth = Math.floor(startD.month() / 3) * 3;
     let d = startD.month(quarterMonth).startOf('month');
@@ -284,9 +284,11 @@ export function CalendarTimelineView() {
         }
 
         if (hasValues) {
+          const q = Math.floor(d.month() / 3) + 1;
           totals.push({
             x: centerX,
-            label: formatTotalRange(minTotal, maxTotal),
+            qLabel: `Q${q} '${d.format('YY')}:`,
+            valueLabel: formatTotalRange(minTotal, maxTotal),
           });
         }
       }
@@ -393,7 +395,7 @@ export function CalendarTimelineView() {
                 top: 0,
                 bottom: 0,
                 width: 0,
-                borderLeft: '1px dashed var(--quarter-line-color)',
+                borderLeft: '2px dashed var(--quarter-line-color)',
               }}
             />
           </div>
@@ -418,7 +420,7 @@ export function CalendarTimelineView() {
                 top: 0,
                 bottom: 0,
                 width: 0,
-                borderLeft: '2px dashed var(--year-line-color)',
+                borderLeft: '4px dashed var(--year-line-color)',
               }}
             />
           </div>
@@ -464,12 +466,12 @@ export function CalendarTimelineView() {
               className="absolute z-10 pointer-events-none"
               style={{
                 left: qt.x,
-                top: 36,
+                top: 44,
                 transform: 'translateX(-50%)',
               }}
             >
-              <span className="inline-block rounded-full bg-proposal/[0.08] border border-proposal/[0.15] px-2.5 py-0.5 text-[13px] font-semibold text-proposal whitespace-nowrap">
-                {qt.label}
+              <span className="inline-block rounded-full bg-proposal/[0.08] border border-proposal/[0.15] px-3 py-1 text-[13px] font-semibold text-proposal whitespace-nowrap">
+                <span className="text-wpnt-text/50">{qt.qLabel}</span>{' '}{qt.valueLabel}
               </span>
             </div>
           ))}

@@ -47,8 +47,8 @@ body {
 /* Non-color theme variables */
 :root {
   --sidebar-shadow: -8px 0 28px -4px rgba(0,0,0,0.22);
-  --year-line-color: rgba(26, 54, 93, 0.4);
-  --quarter-line-color: rgba(26, 54, 93, 0.12);
+  --year-line-color: rgba(26, 54, 93, 0.6);
+  --quarter-line-color: rgba(26, 54, 93, 0.25);
 }
 
 /* ── Dark / High Contrast Theme ───────────────────────── */
@@ -79,8 +79,8 @@ body {
   --color-sidebar-active: #1E3A5F;
 
   --sidebar-shadow: -6px 0 20px -4px rgba(0,0,0,0.5);
-  --year-line-color: rgba(59, 130, 246, 0.45);
-  --quarter-line-color: rgba(59, 130, 246, 0.15);
+  --year-line-color: rgba(59, 130, 246, 0.65);
+  --quarter-line-color: rgba(59, 130, 246, 0.3);
 }
 
 /* ── Modern Minimal Theme ─────────────────────────────── */
@@ -140,6 +140,6 @@ body {
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
 
-  --year-line-color: rgba(31, 78, 120, 0.4);
-  --quarter-line-color: rgba(31, 78, 120, 0.12);
+  --year-line-color: rgba(31, 78, 120, 0.6);
+  --quarter-line-color: rgba(31, 78, 120, 0.25);
 }
