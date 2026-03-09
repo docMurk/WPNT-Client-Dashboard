@@ -255,8 +255,7 @@ export function CalendarTimelineView() {
   // Quarter value totals (shown in quarterly view)
   const quarterTotals = useMemo(() => {
     const span = visibleTimeEnd - visibleTimeStart;
-    const spanDays = span / DAY_MS;
-    if (spanDays < 365 || containerWidth === 0) return [];
+    if (containerWidth === 0 || span <= 0) return [];
 
     const totals: { x: number; label: string }[] = [];
     const startD = dayjs(visibleTimeStart);
@@ -467,11 +466,11 @@ export function CalendarTimelineView() {
               className="absolute z-10 pointer-events-none"
               style={{
                 left: qt.x,
-                top: 28,
+                top: 36,
                 transform: 'translateX(-50%)',
               }}
             >
-              <span className="text-[12px] font-semibold text-proposal whitespace-nowrap">
+              <span className="inline-block rounded-full bg-proposal/[0.08] border border-proposal/[0.15] px-2.5 py-0.5 text-[13px] font-semibold text-proposal whitespace-nowrap">
                 {qt.label}
               </span>
             </div>
