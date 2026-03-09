@@ -18,8 +18,6 @@ import { UploadPreview } from './UploadPreview';
 
 const MIN_ZOOM = 7 * 24 * 60 * 60 * 1000; // 1 week
 const MAX_ZOOM = 2 * 365 * 24 * 60 * 60 * 1000; // 2 years
-const DAY_MS = 24 * 60 * 60 * 1000;
-
 function formatCurrencyShort(amount: number): string {
   if (amount >= 1000000) {
     const m = Math.round((amount / 1000000) * 10) / 10;
