@@ -18,6 +18,25 @@ import { UploadPreview } from './UploadPreview';
 
 const MIN_ZOOM = 7 * 24 * 60 * 60 * 1000; // 1 week
 const MAX_ZOOM = 2 * 365 * 24 * 60 * 60 * 1000; // 2 years
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function formatCurrencyShort(amount: number): string {
+  if (amount >= 1000000) {
+    const m = Math.round((amount / 1000000) * 10) / 10;
+    return `$${m}M`;
+  }
+  if (amount >= 1000) {
+    const k = Math.round((amount / 1000) * 2) / 2;
+    if (k % 1 === 0) return `$${k}K`;
+    return `$${k}K`;
+  }
+  return `$${amount}`;
+}
+
+function formatTotalRange(min: number, max: number): string {
+  if (min === max) return formatCurrencyShort(max);
+  return `${formatCurrencyShort(min)}\u2013${formatCurrencyShort(max)}`;
+}
 
 function formatCardDate(dateStr: string): string {
   const d = new Date(dateStr + 'T00:00:00');
@@ -212,6 +231,74 @@ export function CalendarTimelineView() {
     return lines;
   }, [visibleTimeStart, visibleTimeEnd, containerWidth]);
 
+  // Quarter boundary lines (Apr 1, Jul 1, Oct 1 — end of Q1, Q2, Q3)
+  const quarterBoundaryLines = useMemo(() => {
+    if (containerWidth === 0) return [];
+    const span = visibleTimeEnd - visibleTimeStart;
+    if (span <= 0) return [];
+    const lines: { x: number; key: string }[] = [];
+    const startYear = dayjs(visibleTimeStart).year();
+    const endYear = dayjs(visibleTimeEnd).year();
+    const quarterStartMonths = [4, 7, 10]; // months that begin Q2, Q3, Q4
+    for (let y = startYear; y <= endYear; y++) {
+      for (const month of quarterStartMonths) {
+        const date = dayjs(`${y}-${String(month).padStart(2, '0')}-01`).valueOf();
+        const x = ((date - visibleTimeStart) / span) * containerWidth;
+        if (x > -10 && x < containerWidth + 10) {
+          lines.push({ x, key: `${y}-m${month}` });
+        }
+      }
+    }
+    return lines;
+  }, [visibleTimeStart, visibleTimeEnd, containerWidth]);
+
+  // Quarter value totals (shown in quarterly view)
+  const quarterTotals = useMemo(() => {
+    const span = visibleTimeEnd - visibleTimeStart;
+    const spanDays = span / DAY_MS;
+    if (spanDays < 365 || containerWidth === 0) return [];
+
+    const totals: { x: number; label: string }[] = [];
+    const startD = dayjs(visibleTimeStart);
+    const quarterMonth = Math.floor(startD.month() / 3) * 3;
+    let d = startD.month(quarterMonth).startOf('month');
+    const end = dayjs(visibleTimeEnd).add(3, 'month');
+
+    while (d.isBefore(end)) {
+      const qStart = d.valueOf();
+      const qEnd = d.add(3, 'month').valueOf();
+      const centerX = (((qStart + qEnd) / 2 - visibleTimeStart) / span) * containerWidth;
+
+      if (centerX > -100 && centerX < containerWidth + 100) {
+        let minTotal = 0;
+        let maxTotal = 0;
+        let hasValues = false;
+
+        for (const entry of entries) {
+          if (entry.outreachType !== 'Proposal') continue;
+          const entryTime = new Date(entry.dateSent + 'T00:00:00').getTime();
+          if (entryTime >= qStart && entryTime < qEnd) {
+            if (entry.dollarAmountMax) {
+              maxTotal += entry.dollarAmountMax;
+              minTotal += entry.dollarAmountMin ?? entry.dollarAmountMax;
+              hasValues = true;
+            }
+          }
+        }
+
+        if (hasValues) {
+          totals.push({
+            x: centerX,
+            label: formatTotalRange(minTotal, maxTotal),
+          });
+        }
+      }
+      d = d.add(3, 'month');
+    }
+
+    return totals;
+  }, [visibleTimeStart, visibleTimeEnd, containerWidth, entries]);
+
   // File drag-and-drop state
   const [isDraggingFile, setIsDraggingFile] = useState(false);
   const [uploadResult, setUploadResult] = useState<ParseResult | null>(null);
@@ -290,7 +377,32 @@ export function CalendarTimelineView() {
           </div>
         )}
 
-        {/* Year boundary lines (Jan 1 vertical dotted lines) */}
+        {/* Quarter boundary lines (dashed vertical lines at end of Q1, Q2, Q3) */}
+        {quarterBoundaryLines.map(({ x, key }) => (
+          <div
+            key={key}
+            className="absolute pointer-events-none"
+            style={{
+              left: x,
+              top: 0,
+              bottom: 0,
+              zIndex: 1,
+            }}
+          >
+            <div
+              className="absolute"
+              style={{
+                left: -1,
+                top: 0,
+                bottom: 0,
+                width: 0,
+                borderLeft: '1px dashed var(--quarter-line-color)',
+              }}
+            />
+          </div>
+        ))}
+
+        {/* Year boundary lines (Jan 1 vertical lines — bold) */}
         {yearBoundaryLines.map(({ x, year }) => (
           <div
             key={year}
@@ -309,7 +421,7 @@ export function CalendarTimelineView() {
                 top: 0,
                 bottom: 0,
                 width: 0,
-                borderLeft: '1px dotted var(--year-line-color)',
+                borderLeft: '2px dashed var(--year-line-color)',
               }}
             />
           </div>
@@ -347,6 +459,23 @@ export function CalendarTimelineView() {
           <span className="absolute top-2 left-1/2 -translate-x-1/2 text-[15px] font-semibold uppercase tracking-wider text-wpnt-text/60 z-10">
             Proposals
           </span>
+
+          {/* Quarter value totals (scrolls with timeline) */}
+          {quarterTotals.map((qt) => (
+            <div
+              key={qt.x}
+              className="absolute z-10 pointer-events-none"
+              style={{
+                left: qt.x,
+                top: 28,
+                transform: 'translateX(-50%)',
+              }}
+            >
+              <span className="text-[12px] font-semibold text-proposal whitespace-nowrap">
+                {qt.label}
+              </span>
+            </div>
+          ))}
 
           {layout.proposals.length === 0 && (
             <div className="absolute inset-0 flex items-center justify-center text-xs text-wpnt-text/40">
