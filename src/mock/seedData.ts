@@ -165,7 +165,7 @@ export const mockClients: Client[] = [
     "id": "c-noble",
     "name": "Noble",
     "clientDomain": "noble.com",
-    "logoUrl": "",
+    "logoUrl": "/noble-logo.svg",
     "industry": "Energy / Drilling",
     "isActive": true
   },

@@ -52,26 +52,24 @@ function layoutCards(
     (a, b) => new Date(a.dateSent).getTime() - new Date(b.dateSent).getTime(),
   );
 
-  // Calculate exact x positions (use T00:00:00 suffix to parse as local time)
+  // Calculate exact x positions for ALL entries (use T00:00:00 suffix to parse as local time)
+  // Lane assignment runs on all entries so that stacking is stable across panning —
+  // only zoom (which changes pixels-per-ms) can alter which cards overlap.
   const withX = sorted.map((entry) => ({
     entry,
     x: ((new Date(entry.dateSent + 'T00:00:00').getTime() - visibleTimeStart) / timeSpan) * containerWidth,
   }));
 
-  // Filter off-screen
-  const visible = withX.filter(
-    (item) => item.x > -CARD_WIDTH && item.x < containerWidth + CARD_WIDTH,
-  );
-
-  // STEP 1: Lane-based positioning
+  // STEP 1: Lane-based positioning on ALL entries (not just visible)
   // Each lane tracks the rightmost card's x-center. A card fits in a lane if
   // its x is at least CARD_WIDTH + CARD_GAP past the lane's rightmost card.
   // This guarantees no two cards in the same lane overlap horizontally.
+  // Because relative x-distances are pan-independent, lanes stay stable during scroll.
   const laneRightmost: number[] = [];
 
-  const cardResults: { entry: OutreachEntry; x: number; lane: number; isOverflow: boolean }[] = [];
+  const allWithLanes: { entry: OutreachEntry; x: number; lane: number; isOverflow: boolean }[] = [];
 
-  for (const item of visible) {
+  for (const item of withX) {
     let assignedLane = -1;
     for (let lane = 0; lane < maxStack; lane++) {
       if (lane >= laneRightmost.length || item.x - laneRightmost[lane] >= CARD_WIDTH + CARD_GAP) {
@@ -83,11 +81,16 @@ function layoutCards(
     if (assignedLane >= 0) {
       if (assignedLane >= laneRightmost.length) laneRightmost.push(item.x);
       else laneRightmost[assignedLane] = item.x;
-      cardResults.push({ entry: item.entry, x: item.x, lane: assignedLane, isOverflow: false });
+      allWithLanes.push({ entry: item.entry, x: item.x, lane: assignedLane, isOverflow: false });
     } else {
-      cardResults.push({ entry: item.entry, x: item.x, lane: -1, isOverflow: true });
+      allWithLanes.push({ entry: item.entry, x: item.x, lane: -1, isOverflow: true });
     }
   }
+
+  // Filter to visible AFTER lane assignment so stacking doesn't change on pan
+  const cardResults = allWithLanes.filter(
+    (item) => item.x > -CARD_WIDTH && item.x < containerWidth + CARD_WIDTH,
+  );
 
   // STEP 2: Group into columns (anchor-based, for overflow badge positioning only)
   const groups: { anchorX: number; items: typeof cardResults }[] = [];
