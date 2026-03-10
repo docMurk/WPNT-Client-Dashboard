@@ -164,7 +164,7 @@ export const mockClients: Client[] = [
   {
     "id": "c-noble",
     "name": "Noble",
-    "clientDomain": "noblecorp.com",
+    "clientDomain": "noble.com",
     "logoUrl": "",
     "industry": "Energy / Drilling",
     "isActive": true
@@ -339,9 +339,9 @@ export const mockOutreachEntries: OutreachEntry[] = [
     "participantCountMax": null,
     "programName": "Investor Relations",
     "programDescription": "Mock interview preparation for Phillips 66 financial communications season",
-    "status": "Open",
-    "outcomeSpend": false,
-    "spendAmount": null,
+    "status": "Accepted",
+    "outcomeSpend": true,
+    "spendAmount": 10500,
     "contactName": "[placeholder]",
     "contactEmail": "[placeholder]",
     "contactTitle": "",
@@ -350,7 +350,7 @@ export const mockOutreachEntries: OutreachEntry[] = [
     "sharepointLink": "",
     "declineNotes": "",
     "crmOwner": "",
-    "isArchived": false
+    "isArchived": true
   },
   {
     "id": "p-06",
@@ -2159,7 +2159,7 @@ export const mockOutreachEntries: OutreachEntry[] = [
     "participantCountMax": null,
     "programName": "",
     "programDescription": "",
-    "status": "Open",
+    "status": "Accepted",
     "outcomeSpend": false,
     "spendAmount": null,
     "contactName": "[from email]",
@@ -2170,7 +2170,7 @@ export const mockOutreachEntries: OutreachEntry[] = [
     "sharepointLink": "",
     "declineNotes": "",
     "crmOwner": "",
-    "isArchived": false
+    "isArchived": true
   },
   {
     "id": "f-17",
@@ -2411,7 +2411,7 @@ export const mockOutreachEntries: OutreachEntry[] = [
     "participantCountMax": null,
     "programName": "",
     "programDescription": "",
-    "status": "Open",
+    "status": "Accepted",
     "outcomeSpend": false,
     "spendAmount": null,
     "contactName": "[from email]",
@@ -2422,7 +2422,7 @@ export const mockOutreachEntries: OutreachEntry[] = [
     "sharepointLink": "",
     "declineNotes": "",
     "crmOwner": "",
-    "isArchived": false
+    "isArchived": true
   },
   {
     "id": "f-26",
@@ -2439,7 +2439,7 @@ export const mockOutreachEntries: OutreachEntry[] = [
     "participantCountMax": null,
     "programName": "",
     "programDescription": "",
-    "status": "Open",
+    "status": "No Response",
     "outcomeSpend": false,
     "spendAmount": null,
     "contactName": "[from email]",
@@ -2450,7 +2450,7 @@ export const mockOutreachEntries: OutreachEntry[] = [
     "sharepointLink": "",
     "declineNotes": "",
     "crmOwner": "",
-    "isArchived": false
+    "isArchived": true
   },
   {
     "id": "f-27",
