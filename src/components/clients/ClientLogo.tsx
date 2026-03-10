@@ -131,7 +131,7 @@ export function ClientLogo({ clientId, size = 32, className = '', showLabel = fa
       {renderLogo()}
       <span
         className="text-[15px] font-medium text-wpnt-body leading-tight text-center line-clamp-2"
-        style={{ maxWidth: size * 3, overflowWrap: 'break-word', wordBreak: 'normal' }}
+        style={{ maxWidth: size * 2.75, overflowWrap: 'break-word', wordBreak: 'normal' }}
       >
         {client.name.replace(/([/\-&])/g, '$1\u200B')}
       </span>

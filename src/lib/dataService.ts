@@ -4,7 +4,7 @@ import { mockClients, mockOutreachEntries } from '@/mock/seedData';
 const CLIENTS_KEY = 'wpnt_clients';
 const OUTREACH_KEY = 'wpnt_outreach';
 const DATA_VERSION_KEY = 'wpnt_data_version';
-const CURRENT_DATA_VERSION = 2; // Bump this to force re-seed from seedData.ts
+const CURRENT_DATA_VERSION = 3; // Bump this to force re-seed from seedData.ts
 
 function generateId(): string {
   return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
@@ -139,6 +139,10 @@ function runMigrations(): void {
     for (const seed of mockClients) {
       if (!currentClientIds.has(seed.id)) mergedClients.push(seed);
     }
+    // Clear stale Noble logo (noblecorp.com returned Maersk Drilling's logo)
+    const noble = mergedClients.find((c: Record<string, unknown>) => c.id === 'c-noble');
+    if (noble) noble.logoUrl = '';
+
     localStorage.setItem(CLIENTS_KEY, JSON.stringify(mergedClients));
 
     localStorage.setItem(DATA_VERSION_KEY, String(CURRENT_DATA_VERSION));

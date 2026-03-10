@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { NavLink } from 'react-router';
 import { CalendarRange, History, Palette } from 'lucide-react';
-import wpntLogo from '@/assets/wpnt-logo.png';
+import wpntGlobe from '@/assets/wpnt-globe.png';
 import { APP_VERSION } from '@/version';
 import { useThemeStore, type ThemeId } from '@/store/themeStore';
 
@@ -38,9 +38,10 @@ export function Sidebar() {
       {/* Logo area */}
       <div className="flex h-16 items-center justify-center border-b border-wpnt-border px-4">
         <img
-          src={wpntLogo}
+          src={wpntGlobe}
           alt="WPNT Communications"
-          className="h-8 w-10 object-contain"
+          className="object-contain"
+          style={{ width: 36, height: 36 }}
         />
       </div>
 
