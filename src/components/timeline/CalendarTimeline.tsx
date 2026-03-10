@@ -454,7 +454,7 @@ export function CalendarTimelineView() {
         </div>
 
         {/* Proposals section */}
-        <div className="relative" style={{ height: proposalHeight }}>
+        <div className="relative z-[2]" style={{ height: proposalHeight }}>
           <span className="absolute top-2 left-1/2 -translate-x-1/2 text-[15px] font-semibold uppercase tracking-wider text-wpnt-text/60 z-10">
             Proposals
           </span>
@@ -565,7 +565,7 @@ export function CalendarTimelineView() {
         />
 
         {/* Follow-ups section */}
-        <div className="relative" style={{ height: followUpHeight }}>
+        <div className="relative z-[2]" style={{ height: followUpHeight }}>
           {layout.followUps.length === 0 && (
             <div className="absolute inset-0 flex items-center justify-center text-xs text-wpnt-text/40">
               No follow-ups in this range

@@ -165,7 +165,7 @@ export function DateAxis({
             left: todayX,
             top: -999,
             bottom: -999,
-            zIndex: 5,
+            zIndex: 1,
           }}
         >
           <div
