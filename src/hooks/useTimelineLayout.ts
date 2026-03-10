@@ -87,15 +87,10 @@ function layoutCards(
     }
   }
 
-  // Filter to visible AFTER lane assignment so stacking doesn't change on pan
-  const cardResults = allWithLanes.filter(
-    (item) => item.x > -CARD_WIDTH && item.x < containerWidth + CARD_WIDTH,
-  );
+  // STEP 2: Group ALL entries into columns (stable across pan, only changes with zoom)
+  const groups: { anchorX: number; items: typeof allWithLanes }[] = [];
 
-  // STEP 2: Group into columns (anchor-based, for overflow badge positioning only)
-  const groups: { anchorX: number; items: typeof cardResults }[] = [];
-
-  for (const item of cardResults) {
+  for (const item of allWithLanes) {
     const lastGroup = groups[groups.length - 1];
     if (lastGroup && Math.abs(item.x - lastGroup.anchorX) < CARD_WIDTH + CARD_GAP) {
       lastGroup.items.push(item);
@@ -104,16 +99,17 @@ function layoutCards(
     }
   }
 
-  // STEP 3: Build output
+  // STEP 3: Build output (filter to visible within each column)
   const allCards: PositionedCard[] = [];
   const allColumns: CardColumn[] = [];
   let actualMaxStack = 0;
+
+  const isVisible = (x: number) => x > -CARD_WIDTH && x < containerWidth + CARD_WIDTH;
 
   for (let gIdx = 0; gIdx < groups.length; gIdx++) {
     const group = groups[gIdx];
     const columnId = `${section}-${gIdx}`;
     const columnCards: PositionedCard[] = [];
-    const columnX = group.items[0].x - CARD_WIDTH / 2;
 
     for (const item of group.items) {
       const y = item.isOverflow
@@ -131,21 +127,26 @@ function layoutCards(
         columnId,
       };
 
-      columnCards.push(card);
-      if (!item.isOverflow) {
-        allCards.push(card);
-        if (item.lane + 1 > actualMaxStack) actualMaxStack = item.lane + 1;
+      if (isVisible(item.x)) {
+        columnCards.push(card);
+        if (!item.isOverflow) {
+          allCards.push(card);
+          if (item.lane + 1 > actualMaxStack) actualMaxStack = item.lane + 1;
+        }
       }
     }
 
+    // Overflow count from ALL cards in column (not just visible)
     const overflowCount = group.items.filter((i) => i.isOverflow).length;
 
-    allColumns.push({
-      id: columnId,
-      x: columnX,
-      cards: columnCards,
-      overflowCount,
-    });
+    if (columnCards.length > 0) {
+      allColumns.push({
+        id: columnId,
+        x: columnCards[0].x,
+        cards: columnCards,
+        overflowCount,
+      });
+    }
   }
 
   return { cards: allCards, columns: allColumns, maxStack: actualMaxStack };

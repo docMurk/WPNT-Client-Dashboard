@@ -5,6 +5,7 @@ import { useFilteredOutreach } from '@/hooks/useOutreach';
 import { useOutreachStore } from '@/store/outreachStore';
 import {
   useTimelineLayout,
+  CARD_WIDTH,
   CARD_HEIGHT,
   STACK_OFFSET,
 } from '@/hooks/useTimelineLayout';
@@ -504,57 +505,64 @@ export function CalendarTimelineView() {
             />
           ))}
 
-          {/* +N more badges for proposals */}
+          {/* +N more badges for proposals — anchored to bottom-most card's bottom-right */}
           {layout.proposalColumns
             .filter((col) => col.overflowCount > 0)
-            .map((col) => (
-              <div
-                key={col.id}
-                className="absolute z-20"
-                style={{
-                  left: col.x + 50,
-                  bottom: 4,
-                }}
-              >
-                <button
-                  onClick={() =>
-                    setOpenOverflow(openOverflow === col.id ? null : col.id)
-                  }
-                  className="rounded-full bg-wpnt-blue px-2 py-0.5 text-[10px] font-semibold text-white hover:bg-wpnt-blue/80"
+            .map((col) => {
+              // Find the bottom-most non-overflow card (lowest lane = closest to axis)
+              const anchor = col.cards
+                .filter((c) => !c.isOverflow)
+                .reduce((best, c) => (!best || c.stackIndex < best.stackIndex) ? c : best, null as typeof col.cards[0] | null);
+              if (!anchor) return null;
+              return (
+                <div
+                  key={col.id}
+                  className="absolute z-20"
+                  style={{
+                    left: anchor.x + CARD_WIDTH,
+                    bottom: -anchor.y - CARD_HEIGHT + 4,
+                  }}
                 >
-                  +{col.overflowCount} more
-                </button>
-                {openOverflow === col.id && (
-                  <div className="absolute bottom-full mb-1 left-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-xl p-2 space-y-1 z-50">
-                    {col.cards
-                      .filter((c) => c.isOverflow)
-                      .map((c) => (
-                        <button
-                          key={c.entry.id}
-                          onClick={() => {
-                            setOpenOverflow(null);
-                            openDetail(c.entry.id);
-                          }}
-                          className="flex items-center gap-2 w-full rounded-md px-2 py-1.5 text-xs hover:bg-wpnt-surface text-left"
-                        >
-                          <ClientLogo
-                            clientId={c.entry.clientId}
-                            size={20}
-                          />
-                          <span className="truncate font-medium text-wpnt-body">
-                            {c.entry.clientName}
-                          </span>
-                          <span className="text-wpnt-text ml-auto whitespace-nowrap">
-                            {formatCardDate(c.entry.dateSent)}
-                            {getAbbreviation(c.entry.programName) &&
-                              ` - ${getAbbreviation(c.entry.programName)}`}
-                          </span>
-                        </button>
-                      ))}
-                  </div>
-                )}
-              </div>
-            ))}
+                  <button
+                    onClick={() =>
+                      setOpenOverflow(openOverflow === col.id ? null : col.id)
+                    }
+                    className="rounded-full bg-wpnt-blue px-2 py-0.5 text-[10px] font-semibold text-white hover:bg-wpnt-blue/80"
+                  >
+                    +{col.overflowCount} more
+                  </button>
+                  {openOverflow === col.id && (
+                    <div className="absolute bottom-full mb-1 left-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-xl p-2 space-y-1 z-50">
+                      {col.cards
+                        .filter((c) => c.isOverflow)
+                        .map((c) => (
+                          <button
+                            key={c.entry.id}
+                            onClick={() => {
+                              setOpenOverflow(null);
+                              openDetail(c.entry.id);
+                            }}
+                            className="flex items-center gap-2 w-full rounded-md px-2 py-1.5 text-xs hover:bg-wpnt-surface text-left"
+                          >
+                            <ClientLogo
+                              clientId={c.entry.clientId}
+                              size={20}
+                            />
+                            <span className="truncate font-medium text-wpnt-body">
+                              {c.entry.clientName}
+                            </span>
+                            <span className="text-wpnt-text ml-auto whitespace-nowrap">
+                              {formatCardDate(c.entry.dateSent)}
+                              {getAbbreviation(c.entry.programName) &&
+                                ` - ${getAbbreviation(c.entry.programName)}`}
+                            </span>
+                          </button>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
         </div>
 
         {/* Date axis */}
@@ -594,54 +602,60 @@ export function CalendarTimelineView() {
             />
           ))}
 
-          {/* +N more badges for follow-ups */}
+          {/* +N more badges for follow-ups — anchored to bottom-most card's bottom-right */}
           {layout.followUpColumns
             .filter((col) => col.overflowCount > 0)
-            .map((col) => (
-              <div
-                key={col.id}
-                className="absolute z-20"
-                style={{
-                  left: col.x + 50,
-                  top: 4,
-                }}
-              >
-                <button
-                  onClick={() =>
-                    setOpenOverflow(openOverflow === col.id ? null : col.id)
-                  }
-                  className="rounded-full bg-wpnt-blue px-2 py-0.5 text-[10px] font-semibold text-white hover:bg-wpnt-blue/80"
+            .map((col) => {
+              // Find the bottom-most non-overflow card (highest lane = furthest from axis)
+              const anchor = col.cards
+                .filter((c) => !c.isOverflow)
+                .reduce((best, c) => (!best || c.stackIndex > best.stackIndex) ? c : best, null as typeof col.cards[0] | null);
+              if (!anchor) return null;
+              return (
+                <div
+                  key={col.id}
+                  className="absolute z-20"
+                  style={{
+                    left: anchor.x + CARD_WIDTH,
+                    top: anchor.y + CARD_HEIGHT - 4,
+                  }}
                 >
-                  +{col.overflowCount} more
-                </button>
-                {openOverflow === col.id && (
-                  <div className="absolute top-full mt-1 left-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-xl p-2 space-y-1 z-50">
-                    {col.cards
-                      .filter((c) => c.isOverflow)
-                      .map((c) => (
-                        <button
-                          key={c.entry.id}
-                          onClick={() => {
-                            setOpenOverflow(null);
-                            openDetail(c.entry.id);
-                          }}
-                          className="flex items-center gap-2 w-full rounded-md px-2 py-1.5 text-xs hover:bg-wpnt-surface text-left"
-                        >
-                          <ClientLogo
-                            clientId={c.entry.clientId}
-                            size={20}
-                          />
-                          <span className="truncate font-medium text-wpnt-body">
-                            {c.entry.clientName}
-                          </span>
-                          <span className="text-wpnt-text ml-auto whitespace-nowrap">
-                            {formatCardDate(c.entry.dateSent)}
-                          </span>
-                        </button>
-                      ))}
-                  </div>
-                )}
-              </div>
+                  <button
+                    onClick={() =>
+                      setOpenOverflow(openOverflow === col.id ? null : col.id)
+                    }
+                    className="rounded-full bg-wpnt-blue px-2 py-0.5 text-[10px] font-semibold text-white hover:bg-wpnt-blue/80"
+                  >
+                    +{col.overflowCount} more
+                  </button>
+                  {openOverflow === col.id && (
+                    <div className="absolute top-full mt-1 left-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-xl p-2 space-y-1 z-50">
+                      {col.cards
+                        .filter((c) => c.isOverflow)
+                        .map((c) => (
+                          <button
+                            key={c.entry.id}
+                            onClick={() => {
+                              setOpenOverflow(null);
+                              openDetail(c.entry.id);
+                            }}
+                            className="flex items-center gap-2 w-full rounded-md px-2 py-1.5 text-xs hover:bg-wpnt-surface text-left"
+                          >
+                            <ClientLogo
+                              clientId={c.entry.clientId}
+                              size={20}
+                            />
+                            <span className="truncate font-medium text-wpnt-body">
+                              {c.entry.clientName}
+                            </span>
+                            <span className="text-wpnt-text ml-auto whitespace-nowrap">
+                              {formatCardDate(c.entry.dateSent)}
+                            </span>
+                          </button>
+                        ))}
+                    </div>
+                  )}
+                </div>
             ))}
 
           <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[15px] font-semibold uppercase tracking-wider text-wpnt-text/60 z-10">
