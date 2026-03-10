@@ -519,7 +519,7 @@ export function CalendarTimelineView() {
                   key={col.id}
                   className="absolute z-20"
                   style={{
-                    left: anchor.x + CARD_WIDTH,
+                    left: anchor.x + CARD_WIDTH - 34,
                     bottom: -anchor.y - CARD_HEIGHT + 4,
                   }}
                 >
@@ -532,7 +532,7 @@ export function CalendarTimelineView() {
                     +{col.overflowCount} more
                   </button>
                   {openOverflow === col.id && (
-                    <div className="absolute bottom-full mb-1 left-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-xl p-2 space-y-1 z-50">
+                    <div className="absolute bottom-full mb-1 right-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-xl p-2 space-y-1 z-50">
                       {col.cards
                         .filter((c) => c.isOverflow)
                         .map((c) => (
@@ -616,8 +616,8 @@ export function CalendarTimelineView() {
                   key={col.id}
                   className="absolute z-20"
                   style={{
-                    left: anchor.x + CARD_WIDTH,
-                    top: anchor.y + CARD_HEIGHT - 4,
+                    left: anchor.x + CARD_WIDTH - 34,
+                    top: anchor.y + CARD_HEIGHT - 20,
                   }}
                 >
                   <button
@@ -629,7 +629,7 @@ export function CalendarTimelineView() {
                     +{col.overflowCount} more
                   </button>
                   {openOverflow === col.id && (
-                    <div className="absolute top-full mt-1 left-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-xl p-2 space-y-1 z-50">
+                    <div className="absolute top-full mt-1 right-0 w-56 rounded-lg border border-wpnt-border bg-wpnt-card shadow-xl p-2 space-y-1 z-50">
                       {col.cards
                         .filter((c) => c.isOverflow)
                         .map((c) => (
