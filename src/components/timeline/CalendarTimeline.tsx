@@ -656,7 +656,8 @@ export function CalendarTimelineView() {
                     </div>
                   )}
                 </div>
-            ))}
+              );
+            })}
 
           <span className="absolute bottom-2 left-1/2 -translate-x-1/2 text-[15px] font-semibold uppercase tracking-wider text-wpnt-text/60 z-10">
             Post-Program Outreach
